@@ -126,9 +126,18 @@ def register():
         username = request.form['username']
         email = request.form['email']
         password = request.form['password']
+        confirm_password = request.form.get('confirm_password')
 
-        if not full_name or not username or not email or not password:
+        if not full_name or not username or not email or not password or not confirm_password:
             flash('Por favor, preencha todos os campos.', 'danger')
+            return redirect(url_for('register'))
+
+        if len(password) < 8:
+            flash('A senha deve ter pelo menos 8 caracteres.', 'danger')
+            return redirect(url_for('register'))
+
+        if password != confirm_password:
+            flash('As senhas não coincidem.', 'danger')
             return redirect(url_for('register'))
 
         if users_collection.find_one({'email': email}):

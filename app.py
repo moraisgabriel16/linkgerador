@@ -1,20 +1,16 @@
 import requests
 
 def upload_to_vercel_blob(file_stream, filename, vercel_token):
-    url = "https://blob.vercel-storage.com/upload"
+    # URL do seu store Vercel Blob
+    store_base_url = "https://fp7mwqxorfkddkwk.public.blob.vercel-storage.com"
+    blob_url = f"{store_base_url}/uploads/{filename}"
     headers = {
-        "Authorization": f"Bearer {vercel_token}"
+        "Authorization": f"Bearer {vercel_token}",
+        "x-vercel-blob-public": "true"
     }
-    files = {
-        "file": (filename, file_stream)
-    }
-    data = {
-        "access": "public",
-        "key": f"uploads/{filename}"
-    }
-    response = requests.post(url, headers=headers, files=files, data=data)
+    response = requests.put(blob_url, headers=headers, data=file_stream)
     response.raise_for_status()
-    return response.json()["url"]
+    return blob_url
 from flask import Flask, render_template, request, redirect, url_for, flash, session, current_app
 from pymongo import MongoClient
 from werkzeug.security import generate_password_hash, check_password_hash

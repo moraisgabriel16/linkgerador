@@ -1,258 +1,269 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{ profile.nome_vendedor }} - Link-in-Bio</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{{ profile.nome_vendedor }} - Link-in-Bio</title>
 
-    <style>
-        body {
-            font-family: 'Roboto', sans-serif;
-            background: {{ chosen_background }};
-            color: #333333;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            margin: 0;
-            padding: 20px;
-            box-sizing: border-box;
-        }
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 
-        .container {
-            text-align: center;
-            background-color: #FFFFFF;
-            padding: 40px;
-            border-radius: 20px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-            max-width: 450px;
-            width: 100%;
-            position: relative;
-            overflow: hidden;
-            border: 1px solid #E0E0E0;
-        }
+  <style>
+    body {
+      font-family: 'Roboto', sans-serif;
+      background: {{ chosen_background }};
+      color: #333;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      margin: 0;
+      padding: 20px;
+      box-sizing: border-box;
+    }
 
-        .profile-pic-area {
-            margin-bottom: 20px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 150px;
-        }
+    .container {
+      text-align: center;
+      background-color: #FFF;
+      padding: 40px;
+      border-radius: 20px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+      max-width: 450px;
+      width: 100%;
+      position: relative;
+      overflow: hidden;
+      border: 1px solid #E0E0E0;
+    }
 
-        .profile-pic {
-            width: 150px;
-            height: 150px;
-            border-radius: 50%;
-            object-fit: cover;
-            object-position: center;
-            border: 5px solid #0064B4;
-            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
-            background: #fff;
-        }
+    .profile-logo-area {
+      margin-bottom: 18px;
+      min-height: 80px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background-color: #FFF;
+      border-radius: 10px;
+      padding: 5px 10px;
+      border: 1px solid #E0E0E0;
+      box-sizing: border-box;
+    }
 
-        .profile-logo-area {
-            margin-bottom: 18px;
-            /* Estas propriedades agora só serão aplicadas se a div for renderizada */
-            min-height: 80px; /* Mantém a altura para logos, se existir */
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            background-color: #FFFFFF; /* Fundo branco garantido se a logo for exibida */
-            border-radius: 10px;
-            padding: 5px;
-            border: 1px solid #E0E0E0;
-            box-sizing: border-box;
-        }
-        .profile-logo {
-            width: 120px;
-            height: 60px;
-            object-fit: contain;
-            display: block;
-            margin: 0 auto;
-        }
+    .profile-logo {
+      max-width: 100%;
+      max-height: 80px;
+      height: auto;
+      object-fit: contain;
+      display: block;
+      margin: 0 auto;
+    }
 
+    .profile-pic-area {
+      margin-bottom: 20px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 150px;
+    }
 
-        h1 {
-            font-family: 'Roboto', sans-serif;
-            color: #002E5C;
-            margin-bottom: 10px;
-            font-size: 34px;
-            font-weight: 700;
-        }
+    .profile-pic {
+      width: 150px;
+      height: 150px;
+      border-radius: 50%;
+      object-fit: cover;
+      object-position: center;
+      border: 5px solid #0064B4;
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+      background: #fff;
+    }
 
-        .job-title {
-            color: #555555;
-            font-size: 16px;
-            font-weight: 400;
-            margin-bottom: 25px;
-            line-height: 1.6;
-        }
-        .company-name {
-            color: #002E5C;
-            font-size: 1.1em;
-            font-weight: 500;
-            margin-top: -10px;
-            margin-bottom: 10px;
-        }
+    h1 {
+      color: #002E5C;
+      margin-bottom: 10px;
+      font-size: 34px;
+      font-weight: 700;
+    }
 
+    .company-name {
+      color: #002E5C;
+      font-size: 1.1em;
+      font-weight: 500;
+      margin-top: -10px;
+      margin-bottom: 10px;
+    }
 
-        .link-button {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            width: calc(100% - 40px);
-            margin: 15px auto;
-            padding: 18px 20px;
-            color: white;
-            text-decoration: none;
-            border-radius: 10px;
-            font-size: 18px;
-            font-weight: 500;
-            transition: transform 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
-            border: none;
-            cursor: pointer;
-            box-shadow: 0 4px 15px rgba(0, 100, 180, 0.2);
-            background-color: #0064B4;
-        }
+    .job-title {
+      color: #555;
+      font-size: 16px;
+      font-weight: 400;
+      margin-bottom: 25px;
+      line-height: 1.6;
+    }
 
-        .link-button i {
-            margin-right: 12px;
-            font-size: 1.2em;
-            line-height: 0;
-        }
+    .link-button {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: calc(100% - 40px);
+      margin: 15px auto;
+      padding: 18px 20px;
+      color: white;
+      text-decoration: none;
+      border-radius: 10px;
+      font-size: 18px;
+      font-weight: 500;
+      transition: transform 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
+      border: none;
+      cursor: pointer;
+      box-shadow: 0 4px 15px rgba(0, 100, 180, 0.2);
+      background-color: #0064B4;
+    }
 
-        .link-button:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 8px 18px rgba(0, 100, 180, 0.3);
-            background-color: #004F90;
-        }
+    .link-button i {
+      margin-right: 12px;
+      font-size: 1.2em;
+      line-height: 0;
+    }
 
-        .whatsapp-button { background-color: #25D366; box-shadow: 0 4px 15px rgba(37, 211, 102, 0.2); }
-        .whatsapp-button:hover { background-color: #1DA851; }
-        .catalog-button { background-color: #007BFF; box-shadow: 0 4px 15px rgba(0, 123, 255, 0.2); }
-        .catalog-button:hover { background-color: #0056b3; }
-        .website-button { background-color: #0064B4; box-shadow: 0 4px 15px rgba(0, 100, 180, 0.2); }
-        .website-button:hover { background-color: #004F90; }
-        .instagram-button { background-image: linear-gradient(to right top, #feda75, #fa7e1e, #d62976, #962fbf, #4f5bd5); box-shadow: 0 4px 15px rgba(228, 64, 95, 0.3); }
-        .instagram-button:hover { background-image: linear-gradient(to right top, #feda75, #fa7e1e, #d62976, #962fbf, #4f5bd5); filter: brightness(0.9); transform: translateY(-4px); }
+    .link-button:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 8px 18px rgba(0, 100, 180, 0.3);
+      background-color: #004F90;
+    }
 
+    .whatsapp-button { background-color: #25D366; box-shadow: 0 4px 15px rgba(37, 211, 102, 0.2); }
+    .whatsapp-button:hover { background-color: #1DA851; }
 
-        .footer {
-            margin-top: 30px;
-            padding: 20px;
-            text-align: center;
-            font-size: 14px;
-            color: #CCCCCC;
-            background-color: #002E5C;
-            border-top: 1px solid #00264D;
-            width: 100%;
-            box-sizing: border-box;
-        }
+    .catalog-button { background-color: #007BFF; box-shadow: 0 4px 15px rgba(0, 123, 255, 0.2); }
+    .catalog-button:hover { background-color: #0056b3; }
 
-        .footer a {
-            color: #FFFFFF;
-            text-decoration: none;
-            font-weight: 500;
-        }
+    .website-button { background-color: #0064B4; box-shadow: 0 4px 15px rgba(0, 100, 180, 0.2); }
+    .website-button:hover { background-color: #004F90; }
 
-        .footer a:hover {
-            color: #ADD8E6;
-            text-decoration: underline;
-        }
+    .instagram-button {
+      background-image: linear-gradient(to right top, #feda75, #fa7e1e, #d62976, #962fbf, #4f5bd5);
+      box-shadow: 0 4px 15px rgba(228, 64, 95, 0.3);
+    }
+    .instagram-button:hover {
+      filter: brightness(0.9);
+      transform: translateY(-4px);
+    }
 
-        @media (max-width: 600px) {
-            .container {
-                padding: 30px 15px;
-            }
-            .profile-pic {
-                width: 120px;
-                height: 120px;
-            }
-            h1 {
-                font-size: 28px;
-            }
-            .job-title {
-                font-size: 15px;
-            }
-            .link-button {
-                padding: 16px 15px;
-                font-size: 16px;
-                width: calc(100% - 30px);
-            }
-            .footer {
-                font-size: 12px;
-                padding: 15px 10px;
-            }
-        }
-    </style>
+    .footer {
+      margin-top: 30px;
+      padding: 20px;
+      text-align: center;
+      font-size: 14px;
+      color: #CCCCCC;
+      background-color: #002E5C;
+      border-top: 1px solid #00264D;
+      width: 100%;
+      box-sizing: border-box;
+    }
+
+    .footer a {
+      color: #FFFFFF;
+      text-decoration: none;
+      font-weight: 500;
+    }
+
+    .footer a:hover {
+      color: #ADD8E6;
+      text-decoration: underline;
+    }
+
+    @media (max-width: 600px) {
+      .container {
+        padding: 30px 15px;
+      }
+      .profile-pic {
+        width: 120px;
+        height: 120px;
+      }
+      h1 {
+        font-size: 28px;
+      }
+      .job-title {
+        font-size: 15px;
+      }
+      .link-button {
+        padding: 16px 15px;
+        font-size: 16px;
+        width: calc(100% - 30px);
+      }
+      .footer {
+        font-size: 12px;
+        padding: 15px 10px;
+      }
+    }
+  </style>
 </head>
 <body>
-    <div class="container">
-        {% if profile.logo_filename %}
-            <div class="profile-logo-area">
-                <img src="{{ profile.logo_filename }}" alt="Logo do Perfil" class="profile-logo">
-            </div>
-        {% endif %}
+  <div class="container">
 
-        <div class="profile-pic-area">
-            <img src="{{ profile.profile_pic_filename }}" alt="Foto de Perfil" class="profile-pic">
-        </div>
+    {% if profile.logo_filename %}
+    <div class="profile-logo-area">
+      <img src="{{ profile.logo_filename }}" alt="Logo da Empresa {{ profile.nome_vendedor }}" class="profile-logo" loading="lazy">
+    </div>
+    {% endif %}
 
-        <h1>{{ profile.nome_vendedor }}</h1>
-        {% if profile.empresa_nome %}
-            <p class="company-name">{{ profile.empresa_nome }}</p>
-        {% endif %}
-        <p class="job-title">
-            <strong>{{ profile.cargo }}</strong><br>
-            {{ profile.descricao }}
-        </p>
-
-        {% if profile.link_whatsapp %}
-        <a href="{{ profile.link_whatsapp | trim }}" target="_blank" class="link-button whatsapp-button">
-            <i class="fab fa-whatsapp"></i> Converse pelo WhatsApp
-        </a>
-        {% endif %}
-
-        {% if profile.link_catalogo %}
-        <a href="{{ profile.link_catalogo | trim }}" target="_blank" class="link-button catalog-button">
-            <i class="fas fa-book"></i> Baixe Nosso Catálogo
-        </a>
-        {% endif %}
-
-        {% if profile.link_website %}
-        <a href="{{ profile.link_website | trim }}" target="_blank" class="link-button website-button">
-            <i class="fas fa-globe"></i> Visite Nosso Site
-        </a>
-        {% endif %}
-
-        {% if profile.link_instagram %}
-        <a href="{{ profile.link_instagram | trim }}" target="_blank" class="link-button instagram-button">
-            <i class="fab fa-instagram"></i> Siga no Instagram
-        </a>
-        {% endif %}
-        {% if profile.other_links %}
-            {% for link in profile.other_links %}
-                {% if link.url %}
-                    <a href="{{ link.url }}" target="_blank" class="link-button" style="background-color:#555;">
-                        <i class="fas fa-link"></i> {{ link.name if link.name else 'Outro Link' }}
-                    </a>
-                {% endif %}
-            {% endfor %}
-        {% endif %}
+    <div class="profile-pic-area">
+      <img src="{{ profile.profile_pic_filename }}" alt="Foto de Perfil" class="profile-pic">
     </div>
 
-    <div class="footer">
-        <p>
-            &copy; 2025 <a href="https://www.moraisdigitalsolutions.site/" target="_blank">Morais Digital</a>. Todos os direitos reservados.
-        </p>
-    </div>
+    <h1>{{ profile.nome_vendedor }}</h1>
+    {% if profile.empresa_nome %}
+    <p class="company-name">{{ profile.empresa_nome }}</p>
+    {% endif %}
+    <p class="job-title">
+      <strong>{{ profile.cargo }}</strong><br>
+      {{ profile.descricao }}
+    </p>
+
+    {% if profile.link_whatsapp %}
+    <a href="{{ profile.link_whatsapp | trim }}" target="_blank" class="link-button whatsapp-button">
+      <i class="fab fa-whatsapp"></i> Converse pelo WhatsApp
+    </a>
+    {% endif %}
+
+    {% if profile.link_catalogo %}
+    <a href="{{ profile.link_catalogo | trim }}" target="_blank" class="link-button catalog-button">
+      <i class="fas fa-book"></i> Baixe Nosso Catálogo
+    </a>
+    {% endif %}
+
+    {% if profile.link_website %}
+    <a href="{{ profile.link_website | trim }}" target="_blank" class="link-button website-button">
+      <i class="fas fa-globe"></i> Visite Nosso Site
+    </a>
+    {% endif %}
+
+    {% if profile.link_instagram %}
+    <a href="{{ profile.link_instagram | trim }}" target="_blank" class="link-button instagram-button">
+      <i class="fab fa-instagram"></i> Siga no Instagram
+    </a>
+    {% endif %}
+
+    {% if profile.other_links %}
+      {% for link in profile.other_links %}
+        {% if link.url %}
+        <a href="{{ link.url }}" target="_blank" class="link-button" style="background-color:#555;">
+          <i class="fas fa-link"></i> {{ link.name if link.name else 'Outro Link' }}
+        </a>
+        {% endif %}
+      {% endfor %}
+    {% endif %}
+
+  </div>
+
+  <div class="footer">
+    <p>
+      &copy; 2025 <a href="https://www.moraisdigitalsolutions.site/" target="_blank">Morais Digital</a>. Todos os direitos reservados.
+    </p>
+  </div>
 </body>
 </html>

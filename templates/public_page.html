@@ -198,14 +198,14 @@
 </head>
 <body>
     <div class="container">
-        {% if profile.logo_filename %} {# AGORA A DIV INTEIRA É CONDICIONAL #}
+        {% if profile.logo_filename %}
             <div class="profile-logo-area">
-                <img src="{{ url_for('static', filename='uploads/' + profile.logo_filename) }}" alt="Logo do Perfil" class="profile-logo">
+                <img src="{{ profile.logo_filename }}" alt="Logo do Perfil" class="profile-logo">
             </div>
-        {% endif %} {# FIM DA CONDICIONAL #}
+        {% endif %}
 
         <div class="profile-pic-area">
-            <img src="{{ url_for('static', filename='uploads/' + profile.get('profile_pic_filename', 'default_profile.jpg')) }}" alt="Foto de Perfil" class="profile-pic">
+            <img src="{{ profile.profile_pic_filename }}" alt="Foto de Perfil" class="profile-pic">
         </div>
 
         <h1>{{ profile.nome_vendedor }}</h1>

@@ -479,9 +479,17 @@
             {% elif profile and profile.other_links %}
                 {% set other_links = profile.other_links %}
             {% endif %}
+            window.initialOtherLinksCount = 0;
             {% for link in other_links %}
                 createOtherLinkField("{{ link.name|e }}", "{{ link.url|e }}");
+                window.initialOtherLinksCount++;
             {% endfor %}
+            // Garante que o contador não seja sobrescrito ao adicionar novos campos
+            if (typeof window.initialOtherLinksCount === 'number') {
+                otherLinksCount = window.initialOtherLinksCount;
+            } else {
+                otherLinksCount = 0;
+            }
 
             // Validação dos outros links no submit
             const form = document.querySelector('form');

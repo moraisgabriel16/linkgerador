@@ -279,7 +279,7 @@
                 <h3>Seu Cartão: {{ user_profile.nome_vendedor }}</h3>
                 <div class="profile-images">
                     <div class="profile-image-wrapper">
-                        <img src="{{ url_for('static', filename='uploads/' + user_profile.get('profile_pic_filename', 'default_profile.jpg')) }}" alt="Sua Foto de Perfil">
+                        <img src="{{ user_profile.get('profile_pic_filename', '/static/uploads/default_profile.jpg') or '/static/uploads/default_profile.jpg' }}" alt="Sua Foto de Perfil">
                     </div>
                     {% if user_profile.logo_filename %}
                         <div class="profile-image-wrapper logo">

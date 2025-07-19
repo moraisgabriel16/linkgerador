@@ -1,16 +1,3 @@
-import requests
-
-def upload_to_vercel_blob(file_stream, filename, vercel_token):
-    # URL do seu store Vercel Blob
-    store_base_url = "https://fp7mwqxorfkddkwk.public.blob.vercel-storage.com"
-    blob_url = f"{store_base_url}/uploads/{filename}"
-    headers = {
-        "Authorization": f"Bearer {vercel_token}",
-        "x-vercel-blob-public": "true"
-    }
-    response = requests.put(blob_url, headers=headers, data=file_stream)
-    response.raise_for_status()
-    return blob_url
 from flask import Flask, render_template, request, redirect, url_for, flash, session, current_app
 from pymongo import MongoClient
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -247,53 +234,9 @@ def edit_profile():
                                    whatsapp_number=whatsapp_input,
                                    instagram_username=instagram_input)
 
-        # Lógica para lidar com upload de foto de perfil
-        profile_pic_filename = user_profile.get('profile_pic_filename') if user_profile else None
-        if 'profile_pic_file' in request.files:
-            file = request.files['profile_pic_file']
-            if file.filename != '':
-                if allowed_file(file.filename):
-                    filename = secure_filename(file.filename)
-                    vercel_token = os.environ.get("BLOB_READ_WRITE_TOKEN")
-                    try:
-                        image_url = upload_to_vercel_blob(file.stream, filename, vercel_token)
-                        profile_pic_filename = image_url
-                    except Exception as e:
-                        flash(f'Erro ao enviar imagem para o Vercel Blob: {str(e)}', 'danger')
-                        return render_template('edit_profile.html', profile=user_profile, form_data=request.form,
-                                               max_upload_size_mb=current_app.config['MAX_CONTENT_LENGTH'] / (1024 * 1024),
-                                               whatsapp_number=whatsapp_input,
-                                               instagram_username=instagram_input)
-                else:
-                    flash('Tipo de arquivo não permitido para a foto de perfil.', 'danger')
-                    return render_template('edit_profile.html', profile=user_profile, form_data=request.form,
-                                           max_upload_size_mb=current_app.config['MAX_CONTENT_LENGTH'] / (1024 * 1024),
-                                           whatsapp_number=whatsapp_input,
-                                           instagram_username=instagram_input)
-
-        # Lógica para lidar com upload de logo
-        logo_filename = user_profile.get('logo_filename') if user_profile else None
-        if 'logo_file' in request.files:
-            file = request.files['logo_file']
-            if file.filename != '':
-                if allowed_file(file.filename):
-                    filename = secure_filename(file.filename)
-                    vercel_token = os.environ.get("BLOB_READ_WRITE_TOKEN")
-                    try:
-                        logo_url = upload_to_vercel_blob(file.stream, filename, vercel_token)
-                        logo_filename = logo_url
-                    except Exception as e:
-                        flash(f'Erro ao enviar logo para o Vercel Blob: {str(e)}', 'danger')
-                        return render_template('edit_profile.html', profile=user_profile, form_data=request.form,
-                                               max_upload_size_mb=current_app.config['MAX_CONTENT_LENGTH'] / (1024 * 1024),
-                                               whatsapp_number=whatsapp_input,
-                                               instagram_username=instagram_input)
-                else:
-                    flash('Tipo de arquivo não permitido para a logo.', 'danger')
-                    return render_template('edit_profile.html', profile=user_profile, form_data=request.form,
-                                           max_upload_size_mb=current_app.config['MAX_CONTENT_LENGTH'] / (1024 * 1024),
-                                           whatsapp_number=whatsapp_input,
-                                           instagram_username=instagram_input)
+        # Agora o frontend envia a URL da imagem/logo já hospedada no Blob
+        profile_pic_filename = request.form.get('profile_pic_filename') or (user_profile.get('profile_pic_filename') if user_profile else None)
+        logo_filename = request.form.get('logo_filename') or (user_profile.get('logo_filename') if user_profile else None)
 
         # Geração do slug
         slug_source = custom_slug if custom_slug else nome_vendedor

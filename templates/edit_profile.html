@@ -342,6 +342,9 @@
                 <p class="info-text">Máximo {{ max_upload_size_mb | round(0) }} MB. Formatos: PNG, JPG, JPEG, GIF, WebP.</p>
             </div>
 
+            <!-- Campo hidden para URL da foto de perfil -->
+            <input type="hidden" id="profile_pic_filename" name="profile_pic_filename" value="{{ form_data.profile_pic_filename if form_data else (profile.profile_pic_filename if profile else '') }}">
+
             <div class="form-group">
                 <label for="logo_file">Logo da Empresa/Marca (para o seu perfil):</label>
                 {% if (form_data and form_data.logo_filename) or (profile and profile.logo_filename) %}
@@ -354,6 +357,9 @@
                 <input type="file" id="logo_file" name="logo_file" accept="image/*">
                 <p class="info-text">Máximo {{ max_upload_size_mb | round(0) }} MB. Formatos: PNG, JPG, JPEG, GIF, WebP. Ideal para logos pequenas e quadradas.</p>
             </div>
+
+            <!-- Campo hidden para URL da logo -->
+            <input type="hidden" id="logo_filename" name="logo_filename" value="{{ form_data.logo_filename if form_data else (profile.logo_filename if profile else '') }}">
 
             <div class="section-title">Links Importantes</div>
             <div class="form-group">
@@ -418,6 +424,71 @@
     <script>
         // JavaScript para validação de URL no frontend
         document.addEventListener('DOMContentLoaded', function() {
+            // --- Vercel Blob Upload ---
+            // Substitua pelo seu token Blob
+            const BLOB_TOKEN = 'vercel_blob_rw_FP7mWQXORFKddKwK_dDoOYbqAcQMgXO1fomQtcyF0x7P5r2';
+            // Endpoint para upload
+            const BLOB_UPLOAD_URL = 'https://blob.vercel-storage.com/upload';
+
+            async function uploadToVercelBlob(file) {
+                const formData = new FormData();
+                formData.append('file', file);
+                // O token precisa ser enviado no header
+                const response = await fetch(BLOB_UPLOAD_URL, {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${BLOB_TOKEN}`
+                    },
+                    body: formData
+                });
+                if (!response.ok) {
+                    throw new Error('Falha no upload: ' + response.statusText);
+                }
+                const data = await response.json();
+                return data.url; // URL pública do arquivo
+            }
+
+            // Manipulador para foto de perfil
+            const profilePicInput = document.getElementById('profile_pic_file');
+            const profilePicHidden = document.getElementById('profile_pic_filename');
+            profilePicInput.addEventListener('change', async function(e) {
+                const file = e.target.files[0];
+                if (!file) return;
+                try {
+                    // Mostra carregando
+                    profilePicInput.disabled = true;
+                    profilePicInput.parentNode.insertAdjacentHTML('beforeend', '<span class="uploading-message">Enviando imagem...</span>');
+                    const url = await uploadToVercelBlob(file);
+                    profilePicHidden.value = url;
+                    // Remove mensagem
+                    const msg = profilePicInput.parentNode.querySelector('.uploading-message');
+                    if (msg) msg.remove();
+                } catch (err) {
+                    alert('Erro ao enviar imagem: ' + err.message);
+                } finally {
+                    profilePicInput.disabled = false;
+                }
+            });
+
+            // Manipulador para logo
+            const logoInput = document.getElementById('logo_file');
+            const logoHidden = document.getElementById('logo_filename');
+            logoInput.addEventListener('change', async function(e) {
+                const file = e.target.files[0];
+                if (!file) return;
+                try {
+                    logoInput.disabled = true;
+                    logoInput.parentNode.insertAdjacentHTML('beforeend', '<span class="uploading-message">Enviando logo...</span>');
+                    const url = await uploadToVercelBlob(file);
+                    logoHidden.value = url;
+                    const msg = logoInput.parentNode.querySelector('.uploading-message');
+                    if (msg) msg.remove();
+                } catch (err) {
+                    alert('Erro ao enviar logo: ' + err.message);
+                } finally {
+                    logoInput.disabled = false;
+                }
+            });
             // Padrão de URL genérico para validação de campos tipo 'url'
             const urlPattern = new RegExp('^(https?:\\/\\/)?'+ // protocol (optional)
                 '((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|'+ // domain name

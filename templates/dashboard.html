@@ -283,7 +283,11 @@
                     </div>
                     {% if user_profile.logo_filename %}
                         <div class="profile-image-wrapper logo">
-                            <img src="{{ url_for('static', filename='uploads/' + user_profile.logo_filename) }}" alt="Logo da Empresa">
+                            {% if user_profile.logo_filename.startswith('http') %}
+                                <img src="{{ user_profile.logo_filename }}" alt="Logo da Empresa">
+                            {% else %}
+                                <img src="{{ url_for('static', filename='uploads/' + user_profile.logo_filename) }}" alt="Logo da Empresa">
+                            {% endif %}
                         </div>
                     {% else %}
                         <div class="profile-image-wrapper logo">

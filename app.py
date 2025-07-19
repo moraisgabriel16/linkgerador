@@ -245,31 +245,47 @@ def edit_profile():
                                    instagram_username=instagram_input)
 
 
-        # Upload de foto de perfil para Cloudinary
-        profile_pic_file = request.files.get('profile_pic_file')
-        if profile_pic_file and allowed_file(profile_pic_file.filename):
-            result = cloudinary.uploader.upload(profile_pic_file,
-                folder='profile_pics',
-                public_id=f"profile_pic_{user_id}",
-                overwrite=True,
-                resource_type="image"
-            )
-            profile_pic_filename = result['secure_url']
-        else:
-            profile_pic_filename = request.form.get('profile_pic_filename') or (user_profile.get('profile_pic_filename') if user_profile else None)
 
-        # Upload de logo para Cloudinary
-        logo_file = request.files.get('logo_file')
-        if logo_file and allowed_file(logo_file.filename):
-            result = cloudinary.uploader.upload(logo_file,
-                folder='logos',
-                public_id=f"logo_{user_id}",
-                overwrite=True,
-                resource_type="image"
-            )
-            logo_filename = result['secure_url']
+        # Remoção de foto de perfil
+        profile_pic_filename = None
+        if request.form.get('profile_pic_filename', '').strip() == '':
+            # Remove do Cloudinary
+            try:
+                cloudinary.uploader.destroy(f"profile_pic_{user_id}")
+            except Exception:
+                pass
         else:
-            logo_filename = request.form.get('logo_filename') or (user_profile.get('logo_filename') if user_profile else None)
+            profile_pic_file = request.files.get('profile_pic_file')
+            if profile_pic_file and allowed_file(profile_pic_file.filename):
+                result = cloudinary.uploader.upload(profile_pic_file,
+                    folder='profile_pics',
+                    public_id=f"profile_pic_{user_id}",
+                    overwrite=True,
+                    resource_type="image"
+                )
+                profile_pic_filename = result['secure_url']
+            else:
+                profile_pic_filename = request.form.get('profile_pic_filename') or (user_profile.get('profile_pic_filename') if user_profile else None)
+
+        # Remoção de logo
+        logo_filename = None
+        if request.form.get('logo_filename', '').strip() == '':
+            try:
+                cloudinary.uploader.destroy(f"logo_{user_id}")
+            except Exception:
+                pass
+        else:
+            logo_file = request.files.get('logo_file')
+            if logo_file and allowed_file(logo_file.filename):
+                result = cloudinary.uploader.upload(logo_file,
+                    folder='logos',
+                    public_id=f"logo_{user_id}",
+                    overwrite=True,
+                    resource_type="image"
+                )
+                logo_filename = result['secure_url']
+            else:
+                logo_filename = request.form.get('logo_filename') or (user_profile.get('logo_filename') if user_profile else None)
 
         # Geração do slug
         slug_source = custom_slug if custom_slug else nome_vendedor

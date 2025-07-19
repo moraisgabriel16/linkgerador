@@ -258,7 +258,7 @@ def edit_profile():
             if file.filename != '':
                 if allowed_file(file.filename):
                     filename = secure_filename(file.filename)
-                    vercel_token = os.environ.get("VERCEL_BLOB_READ_WRITE_TOKEN")
+                    vercel_token = os.environ.get("BLOB_READ_WRITE_TOKEN")
                     try:
                         image_url = upload_to_vercel_blob(file.stream, filename, vercel_token)
                         profile_pic_filename = image_url
@@ -282,7 +282,7 @@ def edit_profile():
             if file.filename != '':
                 if allowed_file(file.filename):
                     filename = secure_filename(file.filename)
-                    vercel_token = os.environ.get("VERCEL_BLOB_READ_WRITE_TOKEN")
+                    vercel_token = os.environ.get("BLOB_READ_WRITE_TOKEN")
                     try:
                         logo_url = upload_to_vercel_blob(file.stream, filename, vercel_token)
                         logo_filename = logo_url

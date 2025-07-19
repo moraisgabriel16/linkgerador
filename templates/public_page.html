@@ -218,7 +218,7 @@
 <body>
   <div class="container">
 
-    {% if profile.logo_filename %}
+    {% if profile.logo_filename and profile.logo_filename != 'None' and profile.logo_filename != None %}
       <div class="profile-logo-area">
         <img src="{{ profile.logo_filename }}" alt="Logo da Empresa {{ profile.nome_vendedor }}" class="profile-logo" loading="lazy">
       </div>

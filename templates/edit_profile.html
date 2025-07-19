@@ -336,6 +336,7 @@
                     {% if profile_pic_url %}
                         <img src="{{ profile_pic_url }}" alt="Foto Atual" class="current-image">
                         <p class="info-text">Imagem atual acima. Faça upload de uma nova para substituir.</p>
+                        <button type="button" id="remove-profile-pic-btn" class="btn btn-outline-danger btn-sm" style="margin-bottom:10px;">Remover Foto</button>
                     {% else %}
                         <p class="info-text">Nenhuma foto de perfil enviada ainda.</p>
                     {% endif %}
@@ -356,6 +357,7 @@
                     {% if logo_url %}
                         <img src="{{ logo_url }}" alt="Logo Atual" class="current-image">
                         <p class="info-text">Logo atual acima. Faça upload de uma nova para substituir.</p>
+                        <button type="button" id="remove-logo-btn" class="btn btn-outline-danger btn-sm" style="margin-bottom:10px;">Remover Logo</button>
                     {% else %}
                         <p class="info-text">Nenhuma logo enviada ainda. Será usada a logo padrão da plataforma, se não houver.</p>
                     {% endif %}
@@ -449,6 +451,25 @@
             const addLinkBtn = document.getElementById('add-link-btn');
             let otherLinksCount = 0;
 
+            // Remover foto de perfil
+            const removeProfilePicBtn = document.getElementById('remove-profile-pic-btn');
+            if (removeProfilePicBtn) {
+                removeProfilePicBtn.addEventListener('click', function() {
+                    document.getElementById('profile_pic_filename').value = '';
+                    removeProfilePicBtn.closest('.form-group').querySelector('.current-image').src = '';
+                    removeProfilePicBtn.closest('.form-group').querySelector('.current-image').style.display = 'none';
+                });
+            }
+
+            // Remover logo
+            const removeLogoBtn = document.getElementById('remove-logo-btn');
+            if (removeLogoBtn) {
+                removeLogoBtn.addEventListener('click', function() {
+                    document.getElementById('logo_filename').value = '';
+                    removeLogoBtn.closest('.form-group').querySelector('.current-image').src = '';
+                    removeLogoBtn.closest('.form-group').querySelector('.current-image').style.display = 'none';
+                });
+            }
             function createOtherLinkField(nameValue = '', urlValue = '') {
                 otherLinksCount++;
                 const div = document.createElement('div');

@@ -321,8 +321,11 @@ if __name__ == '__main__':
 # Mover a rota dinâmica para o final do arquivo
 @app.route('/<string:slug>')
 def public_profile(slug):
-    profile = profiles_collection.find_one({'slug_url': slug})
+    ROUTES_FIXAS = {'login', 'register', 'dashboard', 'edit_profile', 'logout', 'static', 'favicon.ico'}
+    if slug in ROUTES_FIXAS:
+        return redirect(url_for(slug))
 
+    profile = profiles_collection.find_one({'slug_url': slug})
     if not profile:
         flash('Perfil não encontrado.', 'danger')
         return redirect(url_for('home'))

@@ -332,9 +332,13 @@
             <div class="form-group">
                 <label for="profile_pic_file">Foto de Perfil:</label>
                 {% if (form_data and form_data.profile_pic_filename) or (profile and profile.profile_pic_filename) %}
-                    <img src="{{ form_data.profile_pic_filename if form_data else profile.profile_pic_filename }}"
-                         alt="Foto Atual" class="current-image">
-                    <p class="info-text">Imagem atual acima. Faça upload de uma nova para substituir.</p>
+                    {% set profile_pic_url = form_data.profile_pic_filename if form_data and form_data.profile_pic_filename else (profile.profile_pic_filename if profile and profile.profile_pic_filename else '') %}
+                    {% if profile_pic_url %}
+                        <img src="{{ profile_pic_url }}" alt="Foto Atual" class="current-image">
+                        <p class="info-text">Imagem atual acima. Faça upload de uma nova para substituir.</p>
+                    {% else %}
+                        <p class="info-text">Nenhuma foto de perfil enviada ainda.</p>
+                    {% endif %}
                 {% else %}
                     <p class="info-text">Nenhuma foto de perfil enviada ainda.</p>
                 {% endif %}
@@ -348,9 +352,13 @@
             <div class="form-group">
                 <label for="logo_file">Logo da Empresa/Marca (para o seu perfil):</label>
                 {% if (form_data and form_data.logo_filename) or (profile and profile.logo_filename) %}
-                    <img src="{{ form_data.logo_filename if form_data else profile.logo_filename }}"
-                         alt="Logo Atual" class="current-image">
-                    <p class="info-text">Logo atual acima. Faça upload de uma nova para substituir.</p>
+                    {% set logo_url = form_data.logo_filename if form_data and form_data.logo_filename else (profile.logo_filename if profile and profile.logo_filename else '') %}
+                    {% if logo_url %}
+                        <img src="{{ logo_url }}" alt="Logo Atual" class="current-image">
+                        <p class="info-text">Logo atual acima. Faça upload de uma nova para substituir.</p>
+                    {% else %}
+                        <p class="info-text">Nenhuma logo enviada ainda. Será usada a logo padrão da plataforma, se não houver.</p>
+                    {% endif %}
                 {% else %}
                     <p class="info-text">Nenhuma logo enviada ainda. Será usada a logo padrão da plataforma, se não houver.</p>
                 {% endif %}

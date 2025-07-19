@@ -272,8 +272,23 @@ def edit_profile():
                 # Compressão da imagem antes do upload
                 try:
                     img = Image.open(profile_pic_file)
+                    # Corrige orientação EXIF se necessário
+                    if hasattr(Image, 'exif_transpose'):
+                        img = Image.exif_transpose(img)
+                    else:
+                        try:
+                            exif = img._getexif()
+                            if exif:
+                                orientation = exif.get(274)
+                                if orientation == 3:
+                                    img = img.rotate(180, expand=True)
+                                elif orientation == 6:
+                                    img = img.rotate(270, expand=True)
+                                elif orientation == 8:
+                                    img = img.rotate(90, expand=True)
+                        except Exception:
+                            pass
                     img_format = img.format if img.format else 'JPEG'
-                    # Redimensiona se maior que 800x800 (opcional)
                     max_size = (800, 800)
                     img.thumbnail(max_size, Image.LANCZOS)
                     buffer = BytesIO()
@@ -287,7 +302,6 @@ def edit_profile():
                     )
                     profile_pic_filename = result['secure_url']
                 except Exception:
-                    # Se falhar, faz upload normal
                     profile_pic_file.seek(0)
                     result = cloudinary.uploader.upload(profile_pic_file,
                         folder='profile_pics',
@@ -312,6 +326,22 @@ def edit_profile():
                 # Compressão da imagem antes do upload
                 try:
                     img = Image.open(logo_file)
+                    # Corrige orientação EXIF se necessário
+                    if hasattr(Image, 'exif_transpose'):
+                        img = Image.exif_transpose(img)
+                    else:
+                        try:
+                            exif = img._getexif()
+                            if exif:
+                                orientation = exif.get(274)
+                                if orientation == 3:
+                                    img = img.rotate(180, expand=True)
+                                elif orientation == 6:
+                                    img = img.rotate(270, expand=True)
+                                elif orientation == 8:
+                                    img = img.rotate(90, expand=True)
+                        except Exception:
+                            pass
                     img_format = img.format if img.format else 'PNG'
                     max_size = (800, 800)
                     img.thumbnail(max_size, Image.LANCZOS)

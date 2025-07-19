@@ -1,3 +1,20 @@
+import requests
+
+def upload_to_vercel_blob(file_stream, filename, vercel_token):
+    url = "https://blob.vercel-storage.com/upload"
+    headers = {
+        "Authorization": f"Bearer {vercel_token}"
+    }
+    files = {
+        "file": (filename, file_stream)
+    }
+    data = {
+        "access": "public",
+        "key": f"uploads/{filename}"
+    }
+    response = requests.post(url, headers=headers, files=files, data=data)
+    response.raise_for_status()
+    return response.json()["url"]
 from flask import Flask, render_template, request, redirect, url_for, flash, session, current_app
 from pymongo import MongoClient
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -241,10 +258,16 @@ def edit_profile():
             if file.filename != '':
                 if allowed_file(file.filename):
                     filename = secure_filename(file.filename)
-                    unique_filename = f"profile_pic_{ObjectId()}_{filename}"
-                    filepath = os.path.join(app.config['UPLOAD_FOLDER'], unique_filename)
-                    file.save(filepath)
-                    profile_pic_filename = unique_filename
+                    vercel_token = os.environ.get("VERCEL_BLOB_READ_WRITE_TOKEN")
+                    try:
+                        image_url = upload_to_vercel_blob(file.stream, filename, vercel_token)
+                        profile_pic_filename = image_url
+                    except Exception as e:
+                        flash(f'Erro ao enviar imagem para o Vercel Blob: {str(e)}', 'danger')
+                        return render_template('edit_profile.html', profile=user_profile, form_data=request.form,
+                                               max_upload_size_mb=current_app.config['MAX_CONTENT_LENGTH'] / (1024 * 1024),
+                                               whatsapp_number=whatsapp_input,
+                                               instagram_username=instagram_input)
                 else:
                     flash('Tipo de arquivo não permitido para a foto de perfil.', 'danger')
                     return render_template('edit_profile.html', profile=user_profile, form_data=request.form,
@@ -259,10 +282,16 @@ def edit_profile():
             if file.filename != '':
                 if allowed_file(file.filename):
                     filename = secure_filename(file.filename)
-                    unique_filename = f"logo_{ObjectId()}_{filename}"
-                    filepath = os.path.join(app.config['UPLOAD_FOLDER'], unique_filename)
-                    file.save(filepath)
-                    logo_filename = unique_filename
+                    vercel_token = os.environ.get("VERCEL_BLOB_READ_WRITE_TOKEN")
+                    try:
+                        logo_url = upload_to_vercel_blob(file.stream, filename, vercel_token)
+                        logo_filename = logo_url
+                    except Exception as e:
+                        flash(f'Erro ao enviar logo para o Vercel Blob: {str(e)}', 'danger')
+                        return render_template('edit_profile.html', profile=user_profile, form_data=request.form,
+                                               max_upload_size_mb=current_app.config['MAX_CONTENT_LENGTH'] / (1024 * 1024),
+                                               whatsapp_number=whatsapp_input,
+                                               instagram_username=instagram_input)
                 else:
                     flash('Tipo de arquivo não permitido para a logo.', 'danger')
                     return render_template('edit_profile.html', profile=user_profile, form_data=request.form,

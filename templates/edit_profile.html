@@ -447,7 +447,7 @@
             // --- Outros Links Dinâmicos ---
             const otherLinksContainer = document.getElementById('other-links-container');
             const addLinkBtn = document.getElementById('add-link-btn');
-        var otherLinksCount = 0;
+            let otherLinksCount = 0;
 
             function createOtherLinkField(nameValue = '', urlValue = '') {
                 otherLinksCount++;
@@ -470,8 +470,6 @@
                 createOtherLinkField();
             });
 
-            // Se quiser popular campos já existentes do backend, pode usar:
-
             // Popular campos de outros links do backend (form_data ou profile)
             {% set other_links = [] %}
             {% if form_data and form_data.other_links %}
@@ -479,19 +477,19 @@
             {% elif profile and profile.other_links %}
                 {% set other_links = profile.other_links %}
             {% endif %}
-            var initialOtherLinksCount = 0;
+            let initialOtherLinksCount = 0;
             {% for link in other_links %}
                 createOtherLinkField("{{ link.name|e }}", "{{ link.url|e }}");
                 initialOtherLinksCount++;
             {% endfor %}
             // Garante que o contador não seja sobrescrito ao adicionar novos campos
-            if (typeof initialOtherLinksCount === 'number' && initialOtherLinksCount > 0) {
+            if (initialOtherLinksCount > 0) {
                 otherLinksCount = initialOtherLinksCount;
             }
 
             // Validação dos outros links no submit
-            const form = document.querySelector('form');
-            form.addEventListener('submit', function(event) {
+            const formEl = document.querySelector('form');
+            formEl.addEventListener('submit', function(event) {
                 let valid = true;
                 const otherUrlInputs = otherLinksContainer.querySelectorAll('input[type="url"]');
                 otherUrlInputs.forEach(input => {
@@ -663,8 +661,7 @@
 
 
             // Opcional: Adicionar validação final ao submeter o formulário
-            const form = document.querySelector('form');
-            form.addEventListener('submit', function(event) {
+            formEl.addEventListener('submit', function(event) {
                 let allValid = true;
 
                 // Valida os campos de URL genéricos

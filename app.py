@@ -3,6 +3,8 @@ from pymongo import MongoClient
 from werkzeug.security import generate_password_hash, check_password_hash
 from werkzeug.utils import secure_filename
 import os
+from io import BytesIO
+from PIL import Image
 import cloudinary
 import cloudinary.uploader
 import cloudinary.api
@@ -37,8 +39,9 @@ profiles_collection = db.profiles
 # --- Configuração de Upload de Imagens ---
 UPLOAD_FOLDER = os.path.join(app.root_path, 'static', 'uploads')
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif', 'webp'}
-MAX_IMAGE_SIZE_MB = 2 # Você pode aumentar este limite se necessário
 
+# Novo limite de upload: 4MB
+MAX_IMAGE_SIZE_MB = 4
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 app.config['MAX_CONTENT_LENGTH'] = MAX_IMAGE_SIZE_MB * 1024 * 1024
 
@@ -266,13 +269,33 @@ def edit_profile():
         else:
             profile_pic_file = request.files.get('profile_pic_file')
             if profile_pic_file and allowed_file(profile_pic_file.filename):
-                result = cloudinary.uploader.upload(profile_pic_file,
-                    folder='profile_pics',
-                    public_id=f"profile_pic_{user_id}",
-                    overwrite=True,
-                    resource_type="image"
-                )
-                profile_pic_filename = result['secure_url']
+                # Compressão da imagem antes do upload
+                try:
+                    img = Image.open(profile_pic_file)
+                    img_format = img.format if img.format else 'JPEG'
+                    # Redimensiona se maior que 800x800 (opcional)
+                    max_size = (800, 800)
+                    img.thumbnail(max_size, Image.LANCZOS)
+                    buffer = BytesIO()
+                    img.save(buffer, format=img_format, quality=80, optimize=True)
+                    buffer.seek(0)
+                    result = cloudinary.uploader.upload(buffer,
+                        folder='profile_pics',
+                        public_id=f"profile_pic_{user_id}",
+                        overwrite=True,
+                        resource_type="image"
+                    )
+                    profile_pic_filename = result['secure_url']
+                except Exception:
+                    # Se falhar, faz upload normal
+                    profile_pic_file.seek(0)
+                    result = cloudinary.uploader.upload(profile_pic_file,
+                        folder='profile_pics',
+                        public_id=f"profile_pic_{user_id}",
+                        overwrite=True,
+                        resource_type="image"
+                    )
+                    profile_pic_filename = result['secure_url']
             else:
                 profile_pic_filename = request.form.get('profile_pic_filename') or (user_profile.get('profile_pic_filename') if user_profile else None)
 
@@ -286,13 +309,31 @@ def edit_profile():
         else:
             logo_file = request.files.get('logo_file')
             if logo_file and allowed_file(logo_file.filename):
-                result = cloudinary.uploader.upload(logo_file,
-                    folder='logos',
-                    public_id=f"logo_{user_id}",
-                    overwrite=True,
-                    resource_type="image"
-                )
-                logo_filename = result['secure_url']
+                # Compressão da imagem antes do upload
+                try:
+                    img = Image.open(logo_file)
+                    img_format = img.format if img.format else 'PNG'
+                    max_size = (800, 800)
+                    img.thumbnail(max_size, Image.LANCZOS)
+                    buffer = BytesIO()
+                    img.save(buffer, format=img_format, quality=80, optimize=True)
+                    buffer.seek(0)
+                    result = cloudinary.uploader.upload(buffer,
+                        folder='logos',
+                        public_id=f"logo_{user_id}",
+                        overwrite=True,
+                        resource_type="image"
+                    )
+                    logo_filename = result['secure_url']
+                except Exception:
+                    logo_file.seek(0)
+                    result = cloudinary.uploader.upload(logo_file,
+                        folder='logos',
+                        public_id=f"logo_{user_id}",
+                        overwrite=True,
+                        resource_type="image"
+                    )
+                    logo_filename = result['secure_url']
             else:
                 logo_filename = request.form.get('logo_filename') or (user_profile.get('logo_filename') if user_profile else None)
 

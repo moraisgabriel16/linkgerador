@@ -275,6 +275,16 @@ def edit_profile():
         slug_source = custom_slug if custom_slug else nome_vendedor
         generated_slug = generate_unique_slug(slug_source, user_id, user_profile.get('slug_url') if user_profile else None)
 
+        # Processa campos dinâmicos de outros links
+        other_links = []
+        for key in request.form:
+            if key.startswith('other_link_name_'):
+                idx = key.split('other_link_name_')[1]
+                name = request.form.get(f'other_link_name_{idx}', '').strip()
+                url = request.form.get(f'other_link_url_{idx}', '').strip()
+                if name and url:
+                    other_links.append({'name': name, 'url': url})
+
         # Preparar os dados para salvar/atualizar no MongoDB
         profile_data = {
             'user_id': ObjectId(user_id),
@@ -290,7 +300,8 @@ def edit_profile():
             'logo_filename': logo_filename,
             'slug_url': generated_slug,
             'background_color': background_color,
-            'custom_background_css': custom_background_css # Salva a string CSS do fundo
+            'custom_background_css': custom_background_css, # Salva a string CSS do fundo
+            'other_links': other_links
         }
 
         if user_profile:

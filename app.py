@@ -311,6 +311,14 @@ def edit_profile():
                            whatsapp_number=whatsapp_number,
                            instagram_username=instagram_username)
 
+
+if __name__ == '__main__':
+    # Garante que a pasta de uploads existe ao iniciar o app
+    if not os.path.exists(UPLOAD_FOLDER):
+        os.makedirs(UPLOAD_FOLDER)
+    app.run(debug=True)
+
+# Mover a rota dinâmica para o final do arquivo
 @app.route('/<string:slug>')
 def public_profile(slug):
     profile = profiles_collection.find_one({'slug_url': slug})
@@ -325,10 +333,3 @@ def public_profile(slug):
         chosen_background = profile.get('background_color', 'linear-gradient(135deg, #F0F2F5, #FFFFFF)')
 
     return render_template('public_page.html', profile=profile, chosen_background=chosen_background)
-
-
-if __name__ == '__main__':
-    # Garante que a pasta de uploads existe ao iniciar o app
-    if not os.path.exists(UPLOAD_FOLDER):
-        os.makedirs(UPLOAD_FOLDER)
-    app.run(debug=True)

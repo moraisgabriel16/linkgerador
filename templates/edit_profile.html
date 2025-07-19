@@ -392,6 +392,13 @@
                        value="{{ form_data.link_instagram if form_data else (instagram_username if instagram_username else '') }}">
                 <p class="info-text">Apenas o nome de usuário (sem "@" ou "instagram.com/").</p>
             </div>
+            <div class="section-title">Outros Links</div>
+            <div id="other-links-container">
+                <!-- Campos de outros links serão inseridos aqui via JS -->
+            </div>
+            <button type="button" id="add-link-btn" class="btn btn-outline-primary" style="margin-bottom:20px;">
+                <i class="fa fa-plus"></i> Adicionar outro link
+            </button>
 
             {# Futura seção para "Outras Redes" #}
             {# <div class="section-title">Outras Redes Sociais</div> #}
@@ -437,6 +444,64 @@
             const BLOB_TOKEN = 'vercel_blob_rw_FP7mWQXORFKddKwK_dDoOYbqAcQMgXO1fomQtcyF0x7P5r2';
             // Endpoint para upload
             const BLOB_UPLOAD_URL = 'https://vercel.blob/v2/upload';
+            // --- Outros Links Dinâmicos ---
+            const otherLinksContainer = document.getElementById('other-links-container');
+            const addLinkBtn = document.getElementById('add-link-btn');
+            let otherLinksCount = 0;
+
+            function createOtherLinkField(nameValue = '', urlValue = '') {
+                otherLinksCount++;
+                const div = document.createElement('div');
+                div.className = 'form-group d-flex align-items-center';
+                div.style.marginBottom = '10px';
+                div.innerHTML = `
+                    <input type="text" name="other_link_name_${otherLinksCount}" class="form-control" placeholder="Nome do Link (ex: Facebook, LinkedIn)" value="${nameValue}" style="max-width:180px; margin-right:10px;">
+                    <input type="url" name="other_link_url_${otherLinksCount}" class="form-control" placeholder="URL do Link" value="${urlValue}" style="margin-right:10px;">
+                    <button type="button" class="btn btn-danger btn-sm remove-link-btn" title="Remover"><i class="fa fa-trash"></i></button>
+                `;
+                // Remover campo
+                div.querySelector('.remove-link-btn').addEventListener('click', function() {
+                    div.remove();
+                });
+                otherLinksContainer.appendChild(div);
+            }
+
+            addLinkBtn.addEventListener('click', function() {
+                createOtherLinkField();
+            });
+
+            // Se quiser popular campos já existentes do backend, pode usar:
+
+            // Popular campos de outros links do backend (form_data ou profile)
+            {% set other_links = [] %}
+            {% if form_data and form_data.other_links %}
+                {% set other_links = form_data.other_links %}
+            {% elif profile and profile.other_links %}
+                {% set other_links = profile.other_links %}
+            {% endif %}
+            {% for link in other_links %}
+                createOtherLinkField("{{ link.name|e }}", "{{ link.url|e }}");
+            {% endfor %}
+
+            // Validação dos outros links no submit
+            const form = document.querySelector('form');
+            form.addEventListener('submit', function(event) {
+                let valid = true;
+                const otherUrlInputs = otherLinksContainer.querySelectorAll('input[type="url"]');
+                otherUrlInputs.forEach(input => {
+                    const urlPattern = /^(https?:\/\/)[\w\-]+(\.[\w\-]+)+[/#?]?.*$/;
+                    if (input.value && !urlPattern.test(input.value)) {
+                        input.classList.add('is-invalid');
+                        valid = false;
+                    } else {
+                        input.classList.remove('is-invalid');
+                    }
+                });
+                if (!valid) {
+                    event.preventDefault();
+                    alert('Corrija os outros links inválidos antes de salvar.');
+                }
+            });
 
             async function uploadToVercelBlob(file) {
                 const formData = new FormData();

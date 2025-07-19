@@ -240,6 +240,15 @@
             <i class="fab fa-instagram"></i> Siga no Instagram
         </a>
         {% endif %}
+        {% if profile.other_links %}
+            {% for link in profile.other_links %}
+                {% if link.url %}
+                    <a href="{{ link.url }}" target="_blank" class="link-button" style="background-color:#555;">
+                        <i class="fas fa-link"></i> {{ link.name if link.name else 'Outro Link' }}
+                    </a>
+                {% endif %}
+            {% endfor %}
+        {% endif %}
     </div>
 
     <div class="footer">

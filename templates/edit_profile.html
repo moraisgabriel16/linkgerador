@@ -457,11 +457,23 @@
                 div.innerHTML = `
                     <input type="text" name="other_link_name_${otherLinksCount}" class="form-control" placeholder="Nome do Link (ex: Facebook, LinkedIn)" value="${nameValue}" style="max-width:180px; margin-right:10px;">
                     <input type="url" name="other_link_url_${otherLinksCount}" class="form-control" placeholder="URL do Link" value="${urlValue}" style="margin-right:10px;">
+                    <button type="button" class="btn btn-success btn-sm confirm-link-btn" title="Confirmar"><i class="fa fa-check"></i></button>
                     <button type="button" class="btn btn-danger btn-sm remove-link-btn" title="Remover"><i class="fa fa-trash"></i></button>
                 `;
                 // Remover campo
                 div.querySelector('.remove-link-btn').addEventListener('click', function() {
                     div.remove();
+                });
+                // Confirmar campo
+                const nameInput = div.querySelector(`input[name="other_link_name_${otherLinksCount}"]`);
+                const urlInput = div.querySelector(`input[name="other_link_url_${otherLinksCount}"]`);
+                const confirmBtn = div.querySelector('.confirm-link-btn');
+                confirmBtn.addEventListener('click', function() {
+                    nameInput.readOnly = true;
+                    urlInput.readOnly = true;
+                    confirmBtn.disabled = true;
+                    confirmBtn.classList.add('btn-secondary');
+                    confirmBtn.classList.remove('btn-success');
                 });
                 otherLinksContainer.appendChild(div);
             }

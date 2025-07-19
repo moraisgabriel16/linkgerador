@@ -1,0 +1,609 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Editar Perfil - Link-in-Bio</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+    <style>
+        :root {
+            --primary-blue: #0064B4;
+            --dark-blue: #002E5C;
+            --light-gray: #F0F2F5;
+            --white: #FFFFFF;
+            --text-dark: #333333;
+            --text-medium: #555555;
+            --border-light: #E0E0E0;
+            --border-medium: #c9c9c9;
+            --border-dark: #ddd;
+            --shadow-light: rgba(0, 0, 0, 0.05);
+            --shadow-medium: rgba(0, 0, 0, 0.1);
+            --shadow-strong: rgba(0, 0, 0, 0.15);
+            --shadow-brand: rgba(0, 100, 180, 0.2);
+            --shadow-brand-hover: rgba(0, 100, 180, 0.3);
+            --success-bg: #e6ffed;
+            --success-text: #1f6b3b;
+            --success-border: #b7e4c7;
+            --danger-bg: #ffe6e8;
+            --danger-text: #a3001a;
+            --danger-border: #ffd1d8;
+            --warning-bg: #fff9e6;
+            --warning-text: #a37200;
+            --warning-border: #ffe8b7;
+        }
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            background: var(--light-gray); /* Fundo com cor sólida */
+            color: var(--text-dark);
+            display: flex;
+            flex-direction: column;
+            justify-content: center; /* Centraliza verticalmente */
+            align-items: center; /* Centraliza horizontalmente */
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px 0;
+            box-sizing: border-box;
+            line-height: 1.6;
+        }
+
+        .container {
+            background-color: var(--white);
+            padding: 40px;
+            border-radius: 15px; /* Bordas mais suaves */
+            box-shadow: 0 10px 25px var(--shadow-medium); /* Sombra mais refinada */
+            max-width: 600px;
+            width: 100%;
+            text-align: center;
+            margin: 30px auto; /* Centraliza e adiciona margem vertical */
+            border: 1px solid var(--border-light);
+            overflow: hidden; /* Garante que sombras internas não vazem */
+        }
+
+        h2 {
+            color: var(--dark-blue);
+            margin-bottom: 30px; /* Mais espaço abaixo do título principal */
+            font-size: 2.5em; /* Título maior */
+            font-weight: 700;
+            letter-spacing: -0.02em; /* Pequeno ajuste para leitura */
+        }
+
+        .section-title {
+            color: var(--primary-blue);
+            font-size: 1.5em; /* Título de seção maior */
+            font-weight: 600;
+            margin-top: 40px; /* Mais espaço acima da seção */
+            margin-bottom: 25px; /* Mais espaço abaixo do título da seção */
+            border-bottom: 2px solid var(--border-light);
+            padding-bottom: 12px;
+            text-align: left;
+            position: relative; /* Para possíveis decorações */
+        }
+        .section-title::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            bottom: -2px; /* Alinha com a borda */
+            width: 50px; /* Linha de destaque */
+            height: 2px;
+            background-color: var(--primary-blue);
+        }
+
+
+        .form-group {
+            margin-bottom: 25px; /* Mais espaço entre os grupos de formulário */
+            text-align: left;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 10px; /* Mais espaço entre label e input */
+            font-weight: 600; /* Mais peso */
+            color: var(--text-dark);
+            font-size: 1em;
+        }
+
+        input[type="text"],
+        input[type="url"],
+        textarea,
+        input[type="color"],
+        select {
+            width: calc(100% - 2px); /* Ajustado para borda */
+            padding: 14px; /* Mais padding */
+            border: 1px solid var(--border-medium);
+            border-radius: 8px;
+            font-size: 1em;
+            box-sizing: border-box;
+            background-color: var(--white);
+            color: var(--text-dark);
+            transition: all 0.3s ease-in-out;
+            box-shadow: inset 0 1px 3px var(--shadow-light); /* Sombra interna para profundidade */
+        }
+        input[type="text"]:focus,
+        input[type="url"]:focus,
+        textarea:focus,
+        input[type="color"]:focus,
+        select:focus {
+            border-color: var(--primary-blue);
+            box-shadow: 0 0 0 3px rgba(0, 100, 180, 0.25), inset 0 1px 3px var(--shadow-medium); /* Sombra mais elaborada */
+            outline: none;
+        }
+
+        input[type="file"] {
+            margin-top: 10px; /* Mais espaço */
+            padding: 12px; /* Mais padding */
+            border: 1px solid var(--border-medium);
+            border-radius: 8px;
+            width: calc(100% - 2px);
+            box-sizing: border-box;
+            background-color: #fcfcfc; /* Fundo mais claro */
+            cursor: pointer;
+            transition: all 0.3s ease-in-out;
+        }
+        input[type="file"]:hover {
+            border-color: var(--primary-blue);
+            box-shadow: 0 0 0 3px rgba(0, 100, 180, 0.1);
+        }
+
+        button[type="submit"] {
+            background-color: var(--primary-blue);
+            color: var(--white);
+            padding: 15px 35px; /* Botão maior */
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1.15em; /* Texto maior */
+            font-weight: 600;
+            transition: all 0.3s ease-in-out;
+            box-shadow: 0 5px 15px var(--shadow-brand);
+            letter-spacing: 0.02em;
+        }
+        button[type="submit"]:hover {
+            background-color: var(--dark-blue); /* Azul mais escuro no hover */
+            transform: translateY(-3px); /* Efeito de elevação maior */
+            box-shadow: 0 8px 20px var(--shadow-brand-hover);
+        }
+
+        .flash-message {
+            padding: 15px 20px; /* Mais padding */
+            margin-bottom: 25px; /* Mais margem */
+            border-radius: 10px; /* Mais arredondado */
+            font-weight: 600; /* Mais forte */
+            font-size: 1em;
+            line-height: 1.5;
+            box-shadow: 0 2px 8px var(--shadow-light);
+        }
+        .flash-message.success { background-color: var(--success-bg); color: var(--success-text); border: 1px solid var(--success-border); }
+        .flash-message.danger { background-color: var(--danger-bg); color: var(--danger-text); border: 1px solid var(--danger-border); }
+        .flash-message.warning { background-color: var(--warning-bg); color: var(--warning-text); border: 1px solid var(--warning-border); }
+
+        .current-image {
+            max-width: 150px; /* Maior visualização */
+            height: auto;
+            border-radius: 10px; /* Cantos mais suaves */
+            margin: 15px auto; /* Centraliza a imagem */
+            border: 3px solid var(--primary-blue); /* Borda da cor principal */
+            box-shadow: 0 4px 12px var(--shadow-strong);
+            display: block;
+        }
+        .info-text {
+            font-size: 0.8em; /* Levemente menor para ser discreto */
+            color: var(--text-medium);
+            margin-top: 8px;
+            line-height: 1.5;
+            padding: 0 5px; /* Pequeno padding para leitura */
+        }
+
+        .bottom-link {
+            margin-top: 35px; /* Mais espaço para o link */
+            font-size: 1.1em;
+        }
+        .bottom-link a {
+            color: var(--primary-blue);
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease-in-out;
+            padding: 5px 10px; /* Área clicável maior */
+            border-radius: 5px;
+        }
+        .bottom-link a:hover {
+            text-decoration: underline;
+            color: var(--dark-blue);
+            background-color: rgba(0, 100, 180, 0.05); /* Fundo suave no hover */
+        }
+
+        /* Estilos para os botões de sugestão de cor */
+        .color-suggestions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px; /* Mais espaço */
+            margin-top: 20px;
+            justify-content: center;
+            padding-bottom: 20px;
+            border-bottom: 1px solid var(--border-light); /* Borda mais suave */
+            margin-bottom: 25px;
+        }
+        .color-swatch {
+            width: 35px; /* Bolinhas maiores */
+            height: 35px;
+            border-radius: 50%;
+            cursor: pointer;
+            border: 3px solid var(--border-light); /* Borda mais grossa */
+            transition: all 0.2s ease;
+            box-shadow: 0 2px 5px var(--shadow-light);
+        }
+        .color-swatch:hover {
+            border-color: var(--primary-blue);
+            transform: scale(1.15); /* Efeito mais pronunciado */
+            box-shadow: 0 4px 10px var(--shadow-medium);
+        }
+        .color-swatch.selected {
+            border-color: var(--primary-blue); /* Borda ao selecionar */
+            box-shadow: 0 0 0 4px rgba(0, 100, 180, 0.3); /* Anel de seleção */
+        }
+
+        @media (max-width: 650px) {
+            .container {
+                padding: 25px;
+                margin: 20px auto;
+                border-radius: 10px;
+                box-shadow: 0 5px 15px var(--shadow-light);
+            }
+            h2 {
+                font-size: 2em;
+                margin-bottom: 20px;
+            }
+            .section-title {
+                font-size: 1.3em;
+                margin-top: 30px;
+                margin-bottom: 20px;
+            }
+            input[type="text"], input[type="url"], textarea, input[type="color"], select, input[type="file"] {
+                padding: 10px;
+                font-size: 0.95em;
+            }
+            button[type="submit"] {
+                padding: 12px 25px;
+                font-size: 1.05em;
+                margin-top: 25px;
+            }
+            .flash-message {
+                padding: 10px 12px;
+                font-size: 0.9em;
+                margin-bottom: 15px;
+            }
+            .current-image {
+                max-width: 100px;
+                border-width: 2px;
+            }
+            .info-text {
+                font-size: 0.75em;
+            }
+            .color-swatch {
+                width: 28px;
+                height: 28px;
+                border-width: 2px;
+            }
+            .color-suggestions {
+                gap: 8px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>{{ "Editar Perfil" if profile else "Criar Seu Perfil" }}</h2>
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="flash-message {{ category }}">{{ message }}</div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+        <form method="POST" enctype="multipart/form-data">
+
+            <div class="section-title">Informações Básicas</div>
+            <div class="form-group">
+                <label for="nome_vendedor">Nome Completo (visível no perfil):</label>
+                <input type="text" id="nome_vendedor" name="nome_vendedor"
+                       value="{{ form_data.nome_vendedor if form_data else (profile.nome_vendedor if profile else '') }}" required>
+            </div>
+            <div class="form-group">
+                <label for="empresa_nome">Nome da Empresa (visível no perfil):</label>
+                <input type="text" id="empresa_nome" name="empresa_nome"
+                       value="{{ form_data.empresa_nome if form_data else (profile.empresa_nome if profile else '') }}">
+                <p class="info-text">Ex: Pão de Alho Só Minas, Morais Digital, etc.</p>
+            </div>
+            <div class="form-group">
+                <label for="cargo">Cargo/Título (visível no perfil):</label>
+                <input type="text" id="cargo" name="cargo"
+                       value="{{ form_data.cargo if form_data else (profile.cargo if profile else '') }}" required>
+            </div>
+            <div class="form-group">
+                <label for="descricao">Descrição/Especialidade (visível no perfil):</label>
+                <textarea id="descricao" name="descricao" rows="3" required>{{ form_data.descricao if form_data else (profile.descricao if profile else '') }}</textarea>
+            </div>
+
+            <div class="section-title">Mídias do Perfil</div>
+            <div class="form-group">
+                <label for="profile_pic_file">Foto de Perfil:</label>
+                {% if (form_data and form_data.profile_pic_filename) or (profile and profile.profile_pic_filename) %}
+                    <img src="{{ url_for('static', filename='uploads/' + (form_data.profile_pic_filename if form_data else profile.profile_pic_filename)) }}"
+                         alt="Foto Atual" class="current-image">
+                    <p class="info-text">Imagem atual acima. Faça upload de uma nova para substituir.</p>
+                {% else %}
+                    <p class="info-text">Nenhuma foto de perfil enviada ainda.</p>
+                {% endif %}
+                <input type="file" id="profile_pic_file" name="profile_pic_file" accept="image/*">
+                <p class="info-text">Máximo {{ max_upload_size_mb | round(0) }} MB. Formatos: PNG, JPG, JPEG, GIF, WebP.</p>
+            </div>
+
+            <div class="form-group">
+                <label for="logo_file">Logo da Empresa/Marca (para o seu perfil):</label>
+                {% if (form_data and form_data.logo_filename) or (profile and profile.logo_filename) %}
+                    <img src="{{ url_for('static', filename='uploads/' + (form_data.logo_filename if form_data else profile.logo_filename)) }}"
+                         alt="Logo Atual" class="current-image">
+                    <p class="info-text">Logo atual acima. Faça upload de uma nova para substituir.</p>
+                {% else %}
+                    <p class="info-text">Nenhuma logo enviada ainda. Será usada a logo padrão da plataforma, se não houver.</p>
+                {% endif %}
+                <input type="file" id="logo_file" name="logo_file" accept="image/*">
+                <p class="info-text">Máximo {{ max_upload_size_mb | round(0) }} MB. Formatos: PNG, JPG, JPEG, GIF, WebP. Ideal para logos pequenas e quadradas.</p>
+            </div>
+
+            <div class="section-title">Links Importantes</div>
+            <div class="form-group">
+                <label for="link_whatsapp">Número de WhatsApp (com DDD):</label>
+                <input type="text" id="link_whatsapp" name="link_whatsapp" placeholder="Ex: 34912345678"
+                       value="{{ form_data.link_whatsapp if form_data else (whatsapp_number if whatsapp_number else '') }}">
+                <p class="info-text">Apenas números. O código do Brasil (55) será adicionado automaticamente.</p>
+            </div>
+            <div class="form-group">
+                <label for="link_catalogo">Link do Catálogo:</label>
+                <input type="url" id="link_catalogo" name="link_catalogo" placeholder="Ex: https://seusite.com.br/catalogo.pdf"
+                       value="{{ form_data.link_catalogo if form_data else (profile.link_catalogo if profile else '') }}">
+            </div>
+            <div class="form-group">
+                <label for="link_website">Link do Site Principal:</label>
+                <input type="url" id="link_website" name="link_website" placeholder="Ex: https://seusite.com.br"
+                       value="{{ form_data.link_website if form_data else (profile.link_website if profile else '') }}">
+            </div>
+            <div class="form-group">
+                <label for="link_instagram">Nome de Usuário do Instagram:</label>
+                <input type="text" id="link_instagram" name="link_instagram" placeholder="Ex: seuusuario"
+                       value="{{ form_data.link_instagram if form_data else (instagram_username if instagram_username else '') }}">
+                <p class="info-text">Apenas o nome de usuário (sem "@" ou "instagram.com/").</p>
+            </div>
+
+            {# Futura seção para "Outras Redes" #}
+            {# <div class="section-title">Outras Redes Sociais</div> #}
+            {# ... (campos dinâmicos para outras redes) ... #}
+
+            <div class="section-title">Personalização e URL</div>
+            <div class="form-group">
+                <label for="custom_slug">URL Personalizada (opcional):</label>
+                <input type="text" id="custom_slug" name="custom_slug" placeholder="Ex: meu-perfil-personalizado"
+                       value="{{ form_data.custom_slug if form_data else (profile.slug_url if profile else '') }}">
+                <p class="info-text">Será a parte final da sua URL: {{ request.url_root | trim('/') }}/<span style="font-weight: bold;">seu-slug-aqui</span></p>
+            </div>
+
+            <div class="form-group">
+                <label for="background_color_picker">Cor de Fundo da Página:</label>
+                <input type="color" id="background_color_picker" name="background_color"
+                       value="{{ form_data.background_color if form_data else (profile.background_color if profile and profile.background_color.startswith('#') else '#F0F2F5') }}"
+                       style="width: 100px; height: 40px; padding: 0;">
+                <p class="info-text">Selecione uma cor sólida para o fundo da sua página.</p>
+
+                <div class="color-suggestions">
+                    <span class="color-swatch" style="background-color: #F0F2F5;" data-color="#F0F2F5" title="Claro"></span>
+                    <span class="color-swatch" style="background-color: #FFFFFF;" data-color="#FFFFFF" title="Branco Puro"></span>
+                    <span class="color-swatch" style="background-color: #ADD8E6;" data-color="#ADD8E6" title="Azul Claro"></span>
+                    <span class="color-swatch" style="background-color: #25D366;" data-color="#25D366" title="Verde WhatsApp"></span>
+                    <span class="color-swatch" style="background-color: #FF6347;" data-color="#FF6347" title="Vermelho Tomate"></span>
+                    <span class="color-swatch" style="background-color: #DAA520;" data-color="#DAA520" title="Dourado"></span>
+                    <span class="color-swatch" style="background-color: #8A2BE2;" data-color="#8A2BE2" title="Azul Violeta"></span>
+                    <span class="color-swatch" style="background-color: #002E5C;" data-color="#002E5C" title="Azul Escuro"></span>
+                </div>
+            </div>
+
+            <button type="submit">Salvar Perfil</button>
+        </form>
+        <p class="bottom-link"><a href="{{ url_for('dashboard') }}">Voltar para o Dashboard</a></p>
+    </div>
+
+    <script>
+        // JavaScript para validação de URL no frontend
+        document.addEventListener('DOMContentLoaded', function() {
+            // Padrão de URL genérico para validação de campos tipo 'url'
+            const urlPattern = new RegExp('^(https?:\\/\\/)?'+ // protocol (optional)
+                '((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|'+ // domain name
+                '((\\d{1,3}\\.){3}\\d{1,3}))'+ // OR ip (v4) address
+                '(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*'+ // port and path
+                '(\\?[;&a-z\\d%_.~+=-]*)?'+ // query string
+                '(\\#[-a-z\\d_]*)?$', 'i'); // fragment locator
+
+            function validateGenericUrl(inputElement) {
+                const value = inputElement.value.trim();
+                let errorSpan = inputElement.parentNode.querySelector('.error-message');
+                if (!errorSpan) {
+                    errorSpan = document.createElement('span');
+                    errorSpan.classList.add('error-message');
+                    inputElement.parentNode.insertBefore(errorSpan, inputElement.nextSibling);
+                }
+
+                if (value === "") {
+                    inputElement.classList.remove('is-invalid');
+                    errorSpan.textContent = "";
+                    return true;
+                }
+
+                if (urlPattern.test(value)) {
+                    inputElement.classList.remove('is-invalid');
+                    errorSpan.textContent = "";
+                    return true;
+                } else {
+                    inputElement.classList.add('is-invalid');
+                    errorSpan.textContent = "URL inválida. Comece com http:// ou https://";
+                    return false;
+                }
+            }
+
+            // Seleciona apenas os campos que ainda são de URL (Catálogo, Site)
+            const genericUrlInputs = document.querySelectorAll('input[type="url"]');
+            genericUrlInputs.forEach(input => {
+                input.addEventListener('blur', function() { // Ao sair do campo
+                    validateGenericUrl(this);
+                });
+                input.addEventListener('input', function() { // Ao digitar
+                    if (this.classList.contains('is-invalid')) {
+                        this.classList.remove('is-invalid');
+                        let errorSpan = this.parentNode.querySelector('.error-message');
+                        if (errorSpan) errorSpan.textContent = "";
+                    }
+                });
+            });
+
+            // Validação para o campo de WhatsApp (apenas números)
+            const whatsappInput = document.getElementById('link_whatsapp');
+            if (whatsappInput) {
+                const whatsappPattern = /^[0-9]+$/; // Apenas números
+                function validateWhatsapp() {
+                    const value = whatsappInput.value.trim();
+                    let errorSpan = whatsappInput.parentNode.querySelector('.error-message');
+                    if (!errorSpan) {
+                        errorSpan = document.createElement('span');
+                        errorSpan.classList.add('error-message');
+                        whatsappInput.parentNode.insertBefore(errorSpan, whatsappInput.nextSibling);
+                    }
+
+                    if (value === "") {
+                        whatsappInput.classList.remove('is-invalid');
+                        errorSpan.textContent = "";
+                        return true;
+                    }
+
+                    if (whatsappPattern.test(value)) {
+                        whatsappInput.classList.remove('is-invalid');
+                        errorSpan.textContent = "";
+                        return true;
+                    } else {
+                        whatsappInput.classList.add('is-invalid');
+                        errorSpan.textContent = "Apenas números (DDD + Número).";
+                        return false;
+                    }
+                }
+                whatsappInput.addEventListener('blur', validateWhatsapp);
+                whatsappInput.addEventListener('input', function() {
+                    if (this.classList.contains('is-invalid')) {
+                        this.classList.remove('is-invalid');
+                        let errorSpan = this.parentNode.querySelector('.error-message');
+                        if (errorSpan) errorSpan.textContent = "";
+                    }
+                });
+            }
+
+            // Validação para o campo de Instagram (nome de usuário)
+            const instagramInput = document.getElementById('link_instagram');
+            if (instagramInput) {
+                const instagramPattern = /^[a-zA-Z0-9._]+$/; // Caracteres permitidos no username
+                function validateInstagram() {
+                    const value = instagramInput.value.trim();
+                    let errorSpan = instagramInput.parentNode.querySelector('.error-message');
+                    if (!errorSpan) {
+                        errorSpan = document.createElement('span');
+                        errorSpan.classList.add('error-message');
+                        instagramInput.parentNode.insertBefore(errorSpan, instagramInput.nextSibling);
+                    }
+
+                    if (value === "") {
+                        instagramInput.classList.remove('is-invalid');
+                        errorSpan.textContent = "";
+                        return true;
+                    }
+
+                    if (instagramPattern.test(value)) {
+                        instagramInput.classList.remove('is-invalid');
+                        errorSpan.textContent = "";
+                        return true;
+                    } else {
+                        instagramInput.classList.add('is-invalid');
+                        errorSpan.textContent = "Nome de usuário inválido.";
+                        return false;
+                    }
+                }
+                instagramInput.addEventListener('blur', validateInstagram);
+                instagramInput.addEventListener('input', function() {
+                    if (this.classList.contains('is-invalid')) {
+                        this.classList.remove('is-invalid');
+                        let errorSpan = this.parentNode.querySelector('.error-message');
+                        if (errorSpan) errorSpan.textContent = "";
+                    }
+                });
+            }
+
+            // JavaScript para seleção de cores sugeridas
+            const colorPicker = document.getElementById('background_color_picker');
+            const colorSwatches = document.querySelectorAll('.color-swatch');
+
+            // Função para atualizar a seleção visual (borda azul)
+            function updateSelectedSwatch() {
+                colorSwatches.forEach(swatch => {
+                    if (swatch.dataset.color === colorPicker.value.toUpperCase()) { // Compara em maiúsculas
+                        swatch.classList.add('selected');
+                    } else {
+                        swatch.classList.remove('selected');
+                    }
+                });
+            }
+
+            colorSwatches.forEach(swatch => {
+                swatch.addEventListener('click', function() {
+                    colorPicker.value = this.dataset.color; // Atualiza o seletor de cor
+                    updateSelectedSwatch(); // Atualiza a seleção visual
+                });
+            });
+
+            // Atualiza a seleção visual quando o color picker é alterado manualmente
+            colorPicker.addEventListener('input', updateSelectedSwatch);
+            colorPicker.addEventListener('change', updateSelectedSwatch); // Para quando a seleção finaliza
+
+            // Chama no carregamento para definir a seleção inicial
+            updateSelectedSwatch();
+
+
+            // Opcional: Adicionar validação final ao submeter o formulário
+            const form = document.querySelector('form');
+            form.addEventListener('submit', function(event) {
+                let allValid = true;
+
+                // Valida os campos de URL genéricos
+                genericUrlInputs.forEach(input => {
+                    if (!validateGenericUrl(input)) {
+                        allValid = false;
+                    }
+                });
+
+                // Valida WhatsApp e Instagram
+                if (whatsappInput && !validateWhatsapp()) {
+                    allValid = false;
+                }
+                if (instagramInput && !validateInstagram()) {
+                    allValid = false;
+                }
+
+                if (!allValid) {
+                    event.preventDefault(); // Impede o envio do formulário se houver erros
+                    // Se não tiver mensagem de erro visível, exibe um alerta genérico
+                    if (!document.querySelector('.flash-message.danger') && !document.querySelector('.error-message')) {
+                        alert('Por favor, corrija os campos com erros antes de salvar.');
+                    }
+                }
+            });
+        });
+    </script>
+</body>
+</html>

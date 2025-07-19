@@ -277,12 +277,17 @@ def edit_profile():
 
         # Processa campos dinâmicos de outros links
         other_links = []
+        processed_idxs = set()
         for key in request.form:
             if key.startswith('other_link_name_'):
                 idx = key.split('other_link_name_')[1]
+                if idx in processed_idxs:
+                    continue
+                processed_idxs.add(idx)
                 name = request.form.get(f'other_link_name_{idx}', '').strip()
                 url = request.form.get(f'other_link_url_{idx}', '').strip()
-                if name and url:
+                # Salva se pelo menos um dos campos estiver preenchido
+                if name or url:
                     other_links.append({'name': name, 'url': url})
 
         # Preparar os dados para salvar/atualizar no MongoDB

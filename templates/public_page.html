@@ -41,25 +41,33 @@
     }
 
     .profile-logo-area {
-      margin-bottom: 18px;
-      min-height: 80px;
+      margin-bottom: 22px;
+      min-height: 100px;
       display: flex;
       justify-content: center;
       align-items: center;
-      background-color: #FFF;
-      border-radius: 10px;
-      padding: 5px 10px;
-      border: 1px solid #E0E0E0;
+      background: #f7fafd;
+      border-radius: 16px;
+      padding: 12px 20px;
+      border: 1.5px solid #e3eaf5;
+      box-shadow: 0 2px 8px rgba(0, 100, 180, 0.07);
       box-sizing: border-box;
+      transition: box-shadow 0.2s;
+    }
+
+    .profile-logo-area:hover {
+      box-shadow: 0 4px 16px rgba(0, 100, 180, 0.13);
     }
 
     .profile-logo {
-      max-width: 100%;
+      max-width: 220px;
       max-height: 80px;
       height: auto;
       object-fit: contain;
       display: block;
       margin: 0 auto;
+      transition: filter 0.2s;
+      filter: drop-shadow(0 2px 4px rgba(0,0,0,0.08));
     }
 
     .profile-pic-area {
@@ -71,27 +79,36 @@
     }
 
     .profile-pic {
-      width: 150px;
-      height: 150px;
-      border-radius: 50%;
-      object-fit: cover;
-      object-position: center;
-      border: 5px solid #0064B4;
-      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
-      background: #fff;
+
+    .profile-logo-area {
+      margin-bottom: 22px;
+      min-height: 100px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: #f7fafd;
+      border-radius: 16px;
+      padding: 12px 20px;
+      border: 1.5px solid #e3eaf5;
+      box-shadow: 0 2px 8px rgba(0, 100, 180, 0.07);
+      box-sizing: border-box;
+      transition: box-shadow 0.2s;
     }
 
-    h1 {
-      color: #002E5C;
-      margin-bottom: 10px;
-      font-size: 34px;
-      font-weight: 700;
+    .profile-logo-area:hover {
+      box-shadow: 0 4px 16px rgba(0, 100, 180, 0.13);
     }
 
-    .company-name {
-      color: #002E5C;
-      font-size: 1.1em;
-      font-weight: 500;
+    .profile-logo {
+      max-width: 220px;
+      max-height: 80px;
+      height: auto;
+      object-fit: contain;
+      display: block;
+      margin: 0 auto;
+      transition: filter 0.2s;
+      filter: drop-shadow(0 2px 4px rgba(0,0,0,0.08));
+    }
       margin-top: -10px;
       margin-bottom: 10px;
     }

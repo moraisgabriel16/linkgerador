@@ -447,7 +447,7 @@
             // --- Outros Links Dinâmicos ---
             const otherLinksContainer = document.getElementById('other-links-container');
             const addLinkBtn = document.getElementById('add-link-btn');
-            let otherLinksCount = 0;
+        var otherLinksCount = 0;
 
             function createOtherLinkField(nameValue = '', urlValue = '') {
                 otherLinksCount++;
@@ -479,16 +479,14 @@
             {% elif profile and profile.other_links %}
                 {% set other_links = profile.other_links %}
             {% endif %}
-            window.initialOtherLinksCount = 0;
+            var initialOtherLinksCount = 0;
             {% for link in other_links %}
                 createOtherLinkField("{{ link.name|e }}", "{{ link.url|e }}");
-                window.initialOtherLinksCount++;
+                initialOtherLinksCount++;
             {% endfor %}
             // Garante que o contador não seja sobrescrito ao adicionar novos campos
-            if (typeof window.initialOtherLinksCount === 'number') {
-                otherLinksCount = window.initialOtherLinksCount;
-            } else {
-                otherLinksCount = 0;
+            if (typeof initialOtherLinksCount === 'number' && initialOtherLinksCount > 0) {
+                otherLinksCount = initialOtherLinksCount;
             }
 
             // Validação dos outros links no submit

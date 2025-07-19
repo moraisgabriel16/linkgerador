@@ -2,3 +2,4 @@ Flask
 pymongo
 werkzeug
 requests
+cloudinary

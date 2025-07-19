@@ -449,71 +449,8 @@
                     },
                     body: formData
                 });
-                if (!response.ok) {
-                    throw new Error('Falha no upload: ' + response.statusText);
-                }
-                const data = await response.json();
-                return data.url; // URL pública do arquivo
-            }
-
-            // Manipulador para foto de perfil
-            const profilePicInput = document.getElementById('profile_pic_file');
-            const profilePicHidden = document.getElementById('profile_pic_filename');
-            profilePicInput.addEventListener('change', async function(e) {
-                const file = e.target.files[0];
-                if (!file) return;
-                try {
-                    // Mostra carregando
-                    profilePicInput.disabled = true;
-                    profilePicInput.parentNode.insertAdjacentHTML('beforeend', '<span class="uploading-message">Enviando imagem...</span>');
-                    const url = await uploadToVercelBlob(file);
-                    profilePicHidden.value = url;
-                    // Remove mensagem
-                    const msg = profilePicInput.parentNode.querySelector('.uploading-message');
-                    if (msg) msg.remove();
-                } catch (err) {
-                    alert('Erro ao enviar imagem: ' + err.message);
-                } finally {
-                    profilePicInput.disabled = false;
-                }
-            });
-
-            // Manipulador para logo
-            const logoInput = document.getElementById('logo_file');
-            const logoHidden = document.getElementById('logo_filename');
-            logoInput.addEventListener('change', async function(e) {
-                const file = e.target.files[0];
-                if (!file) return;
-                try {
-                    logoInput.disabled = true;
-                    logoInput.parentNode.insertAdjacentHTML('beforeend', '<span class="uploading-message">Enviando logo...</span>');
-                    const url = await uploadToVercelBlob(file);
-                    logoHidden.value = url;
-                    const msg = logoInput.parentNode.querySelector('.uploading-message');
-                    if (msg) msg.remove();
-                } catch (err) {
-                    alert('Erro ao enviar logo: ' + err.message);
-                } finally {
-                    logoInput.disabled = false;
-                }
-            });
-            // Padrão de URL genérico para validação de campos tipo 'url'
-            const urlPattern = new RegExp('^(https?:\\/\\/)?'+ // protocol (optional)
-                '((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|'+ // domain name
-                '((\\d{1,3}\\.){3}\\d{1,3}))'+ // OR ip (v4) address
-                '(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*'+ // port and path
-                '(\\?[;&a-z\\d%_.~+=-]*)?'+ // query string
-                '(\\#[-a-z\\d_]*)?$', 'i'); // fragment locator
-
-            function validateGenericUrl(inputElement) {
-                const value = inputElement.value.trim();
-                let errorSpan = inputElement.parentNode.querySelector('.error-message');
-                if (!errorSpan) {
-                    errorSpan = document.createElement('span');
-                    errorSpan.classList.add('error-message');
-                    inputElement.parentNode.insertBefore(errorSpan, inputElement.nextSibling);
-                }
-
+        // Upload de imagens será feito pelo backend Flask usando Cloudinary.
+        // O campo <input type="file"> funciona normalmente, sem JS extra.
                 if (value === "") {
                     inputElement.classList.remove('is-invalid');
                     errorSpan.textContent = "";

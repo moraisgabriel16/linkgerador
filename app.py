@@ -3,10 +3,20 @@ from pymongo import MongoClient
 from werkzeug.security import generate_password_hash, check_password_hash
 from werkzeug.utils import secure_filename
 import os
+import cloudinary
+import cloudinary.uploader
+import cloudinary.api
 import re
 from bson.objectid import ObjectId
 
 app = Flask(__name__)
+# --- Configuração do Cloudinary ---
+cloudinary.config(
+    cloud_name = 'djqeq4f2l',
+    api_key = '914332463917138',
+    api_secret = 'gYvTTXlzjjO_8rxd9oB627674tc',
+    secure = True
+)
 # MUDE ISSO PARA UMA CHAVE FORTE E ÚNICA EM PRODUÇÃO!
 # Gere uma string aleatória longa para produção. Ex: os.urandom(24).hex()
 app.secret_key = 'sua_chave_secreta_aqui_para_sessoes_muito_segura_e_longa_para_producao'
@@ -234,9 +244,32 @@ def edit_profile():
                                    whatsapp_number=whatsapp_input,
                                    instagram_username=instagram_input)
 
-        # Agora o frontend envia a URL da imagem/logo já hospedada no Blob
-        profile_pic_filename = request.form.get('profile_pic_filename') or (user_profile.get('profile_pic_filename') if user_profile else None)
-        logo_filename = request.form.get('logo_filename') or (user_profile.get('logo_filename') if user_profile else None)
+
+        # Upload de foto de perfil para Cloudinary
+        profile_pic_file = request.files.get('profile_pic_file')
+        if profile_pic_file and allowed_file(profile_pic_file.filename):
+            result = cloudinary.uploader.upload(profile_pic_file,
+                folder='profile_pics',
+                public_id=f"profile_pic_{user_id}",
+                overwrite=True,
+                resource_type="image"
+            )
+            profile_pic_filename = result['secure_url']
+        else:
+            profile_pic_filename = request.form.get('profile_pic_filename') or (user_profile.get('profile_pic_filename') if user_profile else None)
+
+        # Upload de logo para Cloudinary
+        logo_file = request.files.get('logo_file')
+        if logo_file and allowed_file(logo_file.filename):
+            result = cloudinary.uploader.upload(logo_file,
+                folder='logos',
+                public_id=f"logo_{user_id}",
+                overwrite=True,
+                resource_type="image"
+            )
+            logo_filename = result['secure_url']
+        else:
+            logo_filename = request.form.get('logo_filename') or (user_profile.get('logo_filename') if user_profile else None)
 
         # Geração do slug
         slug_source = custom_slug if custom_slug else nome_vendedor

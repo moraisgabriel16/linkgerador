@@ -376,23 +376,27 @@
                 <label for="link_whatsapp">Número de WhatsApp (com DDD):</label>
                 <input type="text" id="link_whatsapp" name="link_whatsapp" placeholder="Ex: 34912345678"
                        value="{{ form_data.link_whatsapp if form_data else (whatsapp_number if whatsapp_number else '') }}">
-                <p class="info-text">Apenas números. O código do Brasil (55) será adicionado automaticamente.</p>
+                <input type="text" id="whatsapp_button_name" name="whatsapp_button_name" placeholder="Nome do botão WhatsApp (ex: Fale Conosco)" value="{{ form_data.whatsapp_button_name if form_data else (profile.whatsapp_button_name if profile else 'WhatsApp') }}" style="margin-top:8px;">
+                <p class="info-text">Apenas números. O código do Brasil (55) será adicionado automaticamente. Você pode personalizar o nome do botão.</p>
             </div>
             <div class="form-group">
                 <label for="link_catalogo">Link do Catálogo:</label>
                 <input type="url" id="link_catalogo" name="link_catalogo" placeholder="Ex: https://seusite.com.br/catalogo.pdf"
                        value="{{ form_data.link_catalogo if form_data else (profile.link_catalogo if profile else '') }}">
+                <input type="text" id="catalogo_button_name" name="catalogo_button_name" placeholder="Nome do botão Catálogo (ex: Ver Catálogo)" value="{{ form_data.catalogo_button_name if form_data else (profile.catalogo_button_name if profile else 'Catálogo') }}" style="margin-top:8px;">
             </div>
             <div class="form-group">
                 <label for="link_website">Link do Site Principal:</label>
                 <input type="url" id="link_website" name="link_website" placeholder="Ex: https://seusite.com.br"
                        value="{{ form_data.link_website if form_data else (profile.link_website if profile else '') }}">
+                <input type="text" id="website_button_name" name="website_button_name" placeholder="Nome do botão Site (ex: Acessar Site)" value="{{ form_data.website_button_name if form_data else (profile.website_button_name if profile else 'Site') }}" style="margin-top:8px;">
             </div>
             <div class="form-group">
                 <label for="link_instagram">Nome de Usuário do Instagram:</label>
                 <input type="text" id="link_instagram" name="link_instagram" placeholder="Ex: seuusuario"
                        value="{{ form_data.link_instagram if form_data else (instagram_username if instagram_username else '') }}">
-                <p class="info-text">Apenas o nome de usuário (sem "@" ou "instagram.com/").</p>
+                <input type="text" id="instagram_button_name" name="instagram_button_name" placeholder="Nome do botão Instagram (ex: Instagram)" value="{{ form_data.instagram_button_name if form_data else (profile.instagram_button_name if profile else 'Instagram') }}" style="margin-top:8px;">
+                <p class="info-text">Apenas o nome de usuário (sem "@" ou "instagram.com/"). Você pode personalizar o nome do botão.</p>
             </div>
             <div class="section-title">Outros Links</div>
             <div id="other-links-container">

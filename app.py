@@ -479,6 +479,12 @@ def google_login():
         return f"Erro no login Google: {e}<br><pre>{tb}</pre>", 500
 
 
+
+# Handler para página 404
+@app.errorhandler(404)
+def page_not_found(e):
+    return render_template('404.html'), 404
+
 if __name__ == '__main__':
     # Garante que a pasta de uploads existe ao iniciar o app
     if not os.path.exists(UPLOAD_FOLDER):

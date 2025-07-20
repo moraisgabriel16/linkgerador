@@ -440,33 +440,39 @@ app.register_blueprint(google_bp, url_prefix="/google_login")
 
 
 
+
 @app.route("/google")
 def google_login():
-    if not google.authorized:
-        return redirect(url_for("google.login"))
-    resp = google.get("userinfo")
-    assert resp.ok, resp.text
-    info = resp.json()
-    email = info.get("email")
-    full_name = info.get("name", email.split("@")[0])
-    username = info.get("given_name", email.split("@")[0])
-    user = users_collection.find_one({"email": email})
-    if not user:
-        new_user = {
-            "full_name": full_name,
-            "username": username,
-            "email": email,
-            "password": ""  # Usuário Google não tem senha local
-        }
-        users_collection.insert_one(new_user)
+    try:
+        if not google.authorized:
+            return redirect(url_for("google.login"))
+        resp = google.get("userinfo")
+        assert resp.ok, resp.text
+        info = resp.json()
+        email = info.get("email")
+        full_name = info.get("name", email.split("@")[0])
+        username = info.get("given_name", email.split("@")[0])
         user = users_collection.find_one({"email": email})
-        flash("Cadastro realizado com sucesso!", "success")
-    else:
-        flash("Login bem-sucedido!", "success")
-    session["user_id"] = str(user["_id"])
-    session["username"] = user["username"]
-    session["full_name"] = user["full_name"]
-    return redirect(url_for("dashboard"))
+        if not user:
+            new_user = {
+                "full_name": full_name,
+                "username": username,
+                "email": email,
+                "password": ""  # Usuário Google não tem senha local
+            }
+            users_collection.insert_one(new_user)
+            user = users_collection.find_one({"email": email})
+            flash("Cadastro realizado com sucesso!", "success")
+        else:
+            flash("Login bem-sucedido!", "success")
+        session["user_id"] = str(user["_id"])
+        session["username"] = user["username"]
+        session["full_name"] = user["full_name"]
+        return redirect(url_for("dashboard"))
+    except Exception as e:
+        import traceback
+        tb = traceback.format_exc()
+        return f"Erro no login Google: {e}<br><pre>{tb}</pre>", 500
 
 
 if __name__ == '__main__':

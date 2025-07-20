@@ -439,18 +439,20 @@ app.register_blueprint(google_bp, url_prefix='/google_login')
 @app.route('/google')
 def google_login():
     if not google.authorized:
-        return redirect(google.authorization_url())
-    resp = google.get('/plus/v1/people/me')
+        return redirect(url_for('google.login'))
+    resp = google.get('userinfo')
     assert resp.ok, resp.text
-    email = resp.json()['emails'][0]['value']
+    info = resp.json()
+    email = info.get('email')
+    full_name = info.get('name', email.split('@')[0])
+    username = info.get('given_name', email.split('@')[0])
     user = users_collection.find_one({'email': email})
     if not user:
-        # Se o usuário não existe no nosso banco, podemos criar um novo registro
         new_user = {
-            'full_name': resp.json()['displayName'],
-            'username': resp.json()['nickname'] if 'nickname' in resp.json() else email.split('@')[0],
+            'full_name': full_name,
+            'username': username,
             'email': email,
-            'password': generate_password_hash(os.urandom(24).hex()) # Gera uma senha aleatória
+            'password': generate_password_hash(os.urandom(24).hex())
         }
         users_collection.insert_one(new_user)
         flash('Cadastro realizado com sucesso! Faça login para continuar.', 'success')

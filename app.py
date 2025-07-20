@@ -1,5 +1,4 @@
 from flask import Flask, render_template, request, redirect, url_for, flash, session, current_app
-from authlib.integrations.flask_client import OAuth
 from pymongo import MongoClient
 from werkzeug.security import generate_password_hash, check_password_hash
 from werkzeug.utils import secure_filename
@@ -9,38 +8,22 @@ from PIL import Image
 import cloudinary
 import cloudinary.uploader
 import cloudinary.api
-from dotenv import load_dotenv
-import os
 import re
 from bson.objectid import ObjectId
+from flask_dance.contrib.google import make_google_blueprint, google
+from flask_dance.consumer import OAuth2ConsumerBlueprint
 
 app = Flask(__name__)
 # --- Configuração do Cloudinary ---
 cloudinary.config(
     cloud_name = 'djqeq4f2l',
-    api_key = os.getenv('CLOUDINARY_API_KEY'),
-    api_secret = os.getenv('CLOUDINARY_API_SECRET'),
+    api_key = '914332463917138',
+    api_secret = 'gYvTTXlzjjO_8rxd9oB627674tc',
     secure = True
 )
 # MUDE ISSO PARA UMA CHAVE FORTE E ÚNICA EM PRODUÇÃO!
 # Gere uma string aleatória longa para produção. Ex: os.urandom(24).hex()
-load_dotenv()
-app.secret_key = os.getenv('FLASK_SECRET_KEY')
-
-# --- Configuração do OAuth Google ---
-oauth = OAuth(app)
-google = oauth.register(
-    name='google',
-    client_id=os.getenv('GOOGLE_CLIENT_ID'),
-    client_secret=os.getenv('GOOGLE_CLIENT_SECRET'),
-    access_token_url='https://accounts.google.com/o/oauth2/token',
-    access_token_params=None,
-    authorize_url='https://accounts.google.com/o/oauth2/auth',
-    authorize_params=None,
-    api_base_url='https://www.googleapis.com/oauth2/v1/',
-    userinfo_endpoint='https://openidconnect.googleapis.com/v1/userinfo',
-    client_kwargs={'scope': 'openid email profile'}
-)
+app.secret_key = 'sua_chave_secreta_aqui_para_sessoes_muito_segura_e_longa_para_producao'
 
 # --- Configuração do MongoDB Atlas ---
 # IMPORTANTE: Em ambiente de produção, use variáveis de ambiente!
@@ -136,43 +119,6 @@ def extract_instagram_username(url):
     return ""
 
 # --- Rotas da Aplicação ---
-
-# --- Google OAuth ---
-@app.route('/login/google')
-def login_google():
-    redirect_uri = url_for('google_callback', _external=True)
-    return google.authorize_redirect(redirect_uri)
-
-@app.route('/login/google/callback')
-def google_callback():
-    token = google.authorize_access_token()
-    userinfo = google.get('userinfo').json()
-    email = userinfo['email']
-    full_name = userinfo.get('name', '')
-    username = email.split('@')[0]
-
-    user = users_collection.find_one({'email': email})
-    if not user:
-        # Cria usuário se não existir
-        new_user = {
-            'full_name': full_name,
-            'username': username,
-            'email': email,
-            'password': None, # Usuário Google não tem senha
-            'google_id': userinfo.get('sub')
-        }
-        users_collection.insert_one(new_user)
-        user = new_user
-    else:
-        # Atualiza nome se mudou
-        users_collection.update_one({'_id': user['_id']}, {'$set': {'full_name': full_name}})
-
-    session['user_id'] = str(user['_id'])
-    session['username'] = username
-    session['full_name'] = full_name
-    flash('Login com Google bem-sucedido!', 'success')
-    return redirect(url_for('dashboard'))
-
 
 @app.route('/')
 def home():
@@ -479,6 +425,41 @@ def edit_profile():
                            max_upload_size_mb=current_app.config['MAX_CONTENT_LENGTH'] / (1024 * 1024),
                            whatsapp_number=whatsapp_number,
                            instagram_username=instagram_username)
+
+
+# Configuração do Google OAuth
+google_bp = make_google_blueprint(
+    client_id=os.getenv('GOOGLE_CLIENT_ID'),
+    client_secret=os.getenv('GOOGLE_CLIENT_SECRET'),
+    redirect_to='google_login'
+)
+app.register_blueprint(google_bp, url_prefix='/google_login')
+
+
+@app.route('/google')
+def google_login():
+    if not google.authorized:
+        return redirect(google.authorization_url())
+    resp = google.get('/plus/v1/people/me')
+    assert resp.ok, resp.text
+    email = resp.json()['emails'][0]['value']
+    user = users_collection.find_one({'email': email})
+    if not user:
+        # Se o usuário não existe no nosso banco, podemos criar um novo registro
+        new_user = {
+            'full_name': resp.json()['displayName'],
+            'username': resp.json()['nickname'] if 'nickname' in resp.json() else email.split('@')[0],
+            'email': email,
+            'password': generate_password_hash(os.urandom(24).hex()) # Gera uma senha aleatória
+        }
+        users_collection.insert_one(new_user)
+        flash('Cadastro realizado com sucesso! Faça login para continuar.', 'success')
+    else:
+        flash('Login bem-sucedido!', 'success')
+    session['user_id'] = str(user['_id']) if user else str(new_user['_id'])
+    session['username'] = user['username'] if user else new_user['username']
+    session['full_name'] = user['full_name'] if user else new_user['full_name']
+    return redirect(url_for('dashboard'))
 
 
 if __name__ == '__main__':

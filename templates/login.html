@@ -72,6 +72,10 @@
             </div>
             <button type="submit">Entrar</button>
         </form>
+        <hr>
+        <a href="{{ url_for('login_google') }}" class="btn btn-outline-primary" style="width:100%;margin-top:10px;">
+            <i class="fab fa-google"></i> Entrar com Google
+        </a>
         <p>Não tem uma conta? <a href="{{ url_for('register') }}">Cadastre-se aqui</a>.</p>
     </div>
 </body>

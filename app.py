@@ -428,40 +428,45 @@ def edit_profile():
 
 
 # Configuração do Google OAuth
+
+# Configuração do Google OAuth (ajuste callback e variáveis de ambiente)
 google_bp = make_google_blueprint(
     client_id=os.getenv('GOOGLE_CLIENT_ID'),
     client_secret=os.getenv('GOOGLE_CLIENT_SECRET'),
-    redirect_to='google_login'
+    scope=["profile", "email"],
+    redirect_url="/google"  # Redireciona para /google após login
 )
-app.register_blueprint(google_bp, url_prefix='/google_login')
+app.register_blueprint(google_bp, url_prefix="/google_login")
 
 
-@app.route('/google')
+
+@app.route("/google")
 def google_login():
     if not google.authorized:
-        return redirect(url_for('google.login'))
-    resp = google.get('userinfo')
+        return redirect(url_for("google.login"))
+    resp = google.get("userinfo")
     assert resp.ok, resp.text
     info = resp.json()
-    email = info.get('email')
-    full_name = info.get('name', email.split('@')[0])
-    username = info.get('given_name', email.split('@')[0])
-    user = users_collection.find_one({'email': email})
+    email = info.get("email")
+    full_name = info.get("name", email.split("@")[0])
+    username = info.get("given_name", email.split("@")[0])
+    user = users_collection.find_one({"email": email})
     if not user:
         new_user = {
-            'full_name': full_name,
-            'username': username,
-            'email': email,
-            'password': generate_password_hash(os.urandom(24).hex())
+            "full_name": full_name,
+            "username": username,
+            "email": email,
+            "password": ""  # Usuário Google não tem senha local
         }
         users_collection.insert_one(new_user)
-        flash('Cadastro realizado com sucesso! Faça login para continuar.', 'success')
+        user = users_collection.find_one({"email": email})
+        flash("Cadastro realizado com sucesso!", "success")
     else:
-        flash('Login bem-sucedido!', 'success')
-    session['user_id'] = str(user['_id']) if user else str(new_user['_id'])
-    session['username'] = user['username'] if user else new_user['username']
-    session['full_name'] = user['full_name'] if user else new_user['full_name']
-    return redirect(url_for('dashboard'))
+        flash("Login bem-sucedido!", "success")
+    session["user_id"] = str(user["_id"])
+    session["username"] = user["username"]
+    session["full_name"] = user["full_name"]
+    return redirect(url_for("dashboard"))
 
 
 if __name__ == '__main__':

@@ -1,4 +1,5 @@
 from flask import Flask, render_template, request, redirect, url_for, flash, session, current_app
+from authlib.integrations.flask_client import OAuth
 from pymongo import MongoClient
 from werkzeug.security import generate_password_hash, check_password_hash
 from werkzeug.utils import secure_filename
@@ -8,6 +9,8 @@ from PIL import Image
 import cloudinary
 import cloudinary.uploader
 import cloudinary.api
+from dotenv import load_dotenv
+import os
 import re
 from bson.objectid import ObjectId
 
@@ -15,13 +18,29 @@ app = Flask(__name__)
 # --- Configuração do Cloudinary ---
 cloudinary.config(
     cloud_name = 'djqeq4f2l',
-    api_key = '914332463917138',
-    api_secret = 'gYvTTXlzjjO_8rxd9oB627674tc',
+    api_key = os.getenv('CLOUDINARY_API_KEY'),
+    api_secret = os.getenv('CLOUDINARY_API_SECRET'),
     secure = True
 )
 # MUDE ISSO PARA UMA CHAVE FORTE E ÚNICA EM PRODUÇÃO!
 # Gere uma string aleatória longa para produção. Ex: os.urandom(24).hex()
-app.secret_key = 'sua_chave_secreta_aqui_para_sessoes_muito_segura_e_longa_para_producao'
+load_dotenv()
+app.secret_key = os.getenv('FLASK_SECRET_KEY')
+
+# --- Configuração do OAuth Google ---
+oauth = OAuth(app)
+google = oauth.register(
+    name='google',
+    client_id=os.getenv('GOOGLE_CLIENT_ID'),
+    client_secret=os.getenv('GOOGLE_CLIENT_SECRET'),
+    access_token_url='https://accounts.google.com/o/oauth2/token',
+    access_token_params=None,
+    authorize_url='https://accounts.google.com/o/oauth2/auth',
+    authorize_params=None,
+    api_base_url='https://www.googleapis.com/oauth2/v1/',
+    userinfo_endpoint='https://openidconnect.googleapis.com/v1/userinfo',
+    client_kwargs={'scope': 'openid email profile'}
+)
 
 # --- Configuração do MongoDB Atlas ---
 # IMPORTANTE: Em ambiente de produção, use variáveis de ambiente!
@@ -117,6 +136,43 @@ def extract_instagram_username(url):
     return ""
 
 # --- Rotas da Aplicação ---
+
+# --- Google OAuth ---
+@app.route('/login/google')
+def login_google():
+    redirect_uri = url_for('google_callback', _external=True)
+    return google.authorize_redirect(redirect_uri)
+
+@app.route('/login/google/callback')
+def google_callback():
+    token = google.authorize_access_token()
+    userinfo = google.get('userinfo').json()
+    email = userinfo['email']
+    full_name = userinfo.get('name', '')
+    username = email.split('@')[0]
+
+    user = users_collection.find_one({'email': email})
+    if not user:
+        # Cria usuário se não existir
+        new_user = {
+            'full_name': full_name,
+            'username': username,
+            'email': email,
+            'password': None, # Usuário Google não tem senha
+            'google_id': userinfo.get('sub')
+        }
+        users_collection.insert_one(new_user)
+        user = new_user
+    else:
+        # Atualiza nome se mudou
+        users_collection.update_one({'_id': user['_id']}, {'$set': {'full_name': full_name}})
+
+    session['user_id'] = str(user['_id'])
+    session['username'] = username
+    session['full_name'] = full_name
+    flash('Login com Google bem-sucedido!', 'success')
+    return redirect(url_for('dashboard'))
+
 
 @app.route('/')
 def home():

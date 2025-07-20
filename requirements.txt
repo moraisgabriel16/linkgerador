@@ -6,3 +6,4 @@ cloudinary
 Pillow
 authlib
 python-dotenv
+flask-dance

@@ -433,7 +433,11 @@ def edit_profile():
 google_bp = make_google_blueprint(
     client_id=os.getenv('GOOGLE_CLIENT_ID'),
     client_secret=os.getenv('GOOGLE_CLIENT_SECRET'),
-    scope=["openid", "email", "profile"],
+    scope=[
+        "openid",
+        "https://www.googleapis.com/auth/userinfo.email",
+        "https://www.googleapis.com/auth/userinfo.profile"
+    ],
     redirect_url="/google"  # Redireciona para /google após login
 )
 app.register_blueprint(google_bp, url_prefix="/google_login")

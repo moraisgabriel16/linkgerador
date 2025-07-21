@@ -10,21 +10,45 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 
     <style>
+        .upload-spinner {
+            display: none;
+            margin: 10px auto 0 auto;
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid var(--primary-blue);
+            border-radius: 50%;
+            width: 36px;
+            height: 36px;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        .upload-error {
+            color: var(--danger-text);
+            background: var(--danger-bg);
+            border: 1px solid var(--danger-border);
+            border-radius: 7px;
+            padding: 8px 12px;
+            margin: 8px 0 0 0;
+            font-size: 0.98em;
+            display: none;
+        }
         :root {
             --primary-blue: #0064B4;
-            --dark-blue: #002E5C;
-            --light-gray: #F0F2F5;
-            --white: #FFFFFF;
-            --text-dark: #333333;
-            --text-medium: #555555;
-            --border-light: #E0E0E0;
-            --border-medium: #c9c9c9;
-            --border-dark: #ddd;
-            --shadow-light: rgba(0, 0, 0, 0.05);
-            --shadow-medium: rgba(0, 0, 0, 0.1);
-            --shadow-strong: rgba(0, 0, 0, 0.15);
-            --shadow-brand: rgba(0, 100, 180, 0.2);
-            --shadow-brand-hover: rgba(0, 100, 180, 0.3);
+            --dark-blue: #003366;
+            --light-gray: #f4faff;
+            --white: #fff;
+            --text-dark: #222;
+            --text-medium: #4a5a6a;
+            --border-light: #e3e8ee;
+            --border-medium: #b3d8f7;
+            --border-dark: #b3d8f7;
+            --shadow-light: rgba(0, 100, 180, 0.06);
+            --shadow-medium: rgba(0, 100, 180, 0.13);
+            --shadow-strong: rgba(0, 100, 180, 0.18);
+            --shadow-brand: rgba(0, 100, 180, 0.13);
+            --shadow-brand-hover: rgba(0, 100, 180, 0.18);
             --success-bg: #e6ffed;
             --success-text: #1f6b3b;
             --success-border: #b7e4c7;
@@ -38,71 +62,71 @@
 
         body {
             font-family: 'Roboto', sans-serif;
-            background: var(--light-gray); /* Fundo com cor sólida */
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9f1fa 100%);
             color: var(--text-dark);
             display: flex;
             flex-direction: column;
-            justify-content: center; /* Centraliza verticalmente */
-            align-items: center; /* Centraliza horizontalmente */
+            justify-content: center;
+            align-items: center;
             min-height: 100vh;
             margin: 0;
-            padding: 20px 0;
+            padding: 32px 8px;
             box-sizing: border-box;
-            line-height: 1.6;
+            line-height: 1.7;
         }
 
         .container {
-            background-color: var(--white);
-            padding: 40px;
-            border-radius: 15px; /* Bordas mais suaves */
-            box-shadow: 0 10px 25px var(--shadow-medium); /* Sombra mais refinada */
-            max-width: 600px;
+            background: var(--white);
+            padding: 48px 36px 38px 36px;
+            border-radius: 22px;
+            box-shadow: 0 8px 32px var(--shadow-medium);
+            max-width: 700px;
             width: 100%;
             text-align: center;
-            margin: 30px auto; /* Centraliza e adiciona margem vertical */
-            border: 1px solid var(--border-light);
-            overflow: hidden; /* Garante que sombras internas não vazem */
+            margin: 30px auto;
+            border: 1.5px solid var(--border-light);
+            overflow: hidden;
         }
 
         h2 {
             color: var(--dark-blue);
-            margin-bottom: 30px; /* Mais espaço abaixo do título principal */
-            font-size: 2.5em; /* Título maior */
-            font-weight: 700;
-            letter-spacing: -0.02em; /* Pequeno ajuste para leitura */
+            margin-bottom: 32px;
+            font-size: 2.3em;
+            font-weight: 800;
+            letter-spacing: -0.03em;
         }
 
         .section-title {
             color: var(--primary-blue);
-            font-size: 1.5em; /* Título de seção maior */
-            font-weight: 600;
-            margin-top: 40px; /* Mais espaço acima da seção */
-            margin-bottom: 25px; /* Mais espaço abaixo do título da seção */
+            font-size: 1.3em;
+            font-weight: 800;
+            margin-top: 38px;
+            margin-bottom: 18px;
             border-bottom: 2px solid var(--border-light);
-            padding-bottom: 12px;
+            padding-bottom: 10px;
             text-align: left;
-            position: relative; /* Para possíveis decorações */
+            position: relative;
+            letter-spacing: -0.5px;
         }
         .section-title::after {
             content: '';
             position: absolute;
             left: 0;
-            bottom: -2px; /* Alinha com a borda */
-            width: 50px; /* Linha de destaque */
+            bottom: -2px;
+            width: 44px;
             height: 2px;
             background-color: var(--primary-blue);
         }
 
-
         .form-group {
-            margin-bottom: 25px; /* Mais espaço entre os grupos de formulário */
+            margin-bottom: 22px;
             text-align: left;
         }
 
         label {
             display: block;
-            margin-bottom: 10px; /* Mais espaço entre label e input */
-            font-weight: 600; /* Mais peso */
+            margin-bottom: 8px;
+            font-weight: 700;
             color: var(--text-dark);
             font-size: 1em;
         }
@@ -112,16 +136,16 @@
         textarea,
         input[type="color"],
         select {
-            width: calc(100% - 2px); /* Ajustado para borda */
-            padding: 14px; /* Mais padding */
-            border: 1px solid var(--border-medium);
-            border-radius: 8px;
+            width: 100%;
+            padding: 14px;
+            border: 1.5px solid var(--border-medium);
+            border-radius: 10px;
             font-size: 1em;
             box-sizing: border-box;
             background-color: var(--white);
             color: var(--text-dark);
-            transition: all 0.3s ease-in-out;
-            box-shadow: inset 0 1px 3px var(--shadow-light); /* Sombra interna para profundidade */
+            transition: all 0.2s;
+            box-shadow: inset 0 1px 3px var(--shadow-light);
         }
         input[type="text"]:focus,
         input[type="url"]:focus,
@@ -129,50 +153,52 @@
         input[type="color"]:focus,
         select:focus {
             border-color: var(--primary-blue);
-            box-shadow: 0 0 0 3px rgba(0, 100, 180, 0.25), inset 0 1px 3px var(--shadow-medium); /* Sombra mais elaborada */
+            box-shadow: 0 0 0 3px rgba(0, 100, 180, 0.18), inset 0 1px 3px var(--shadow-medium);
             outline: none;
         }
 
         input[type="file"] {
-            margin-top: 10px; /* Mais espaço */
-            padding: 12px; /* Mais padding */
-            border: 1px solid var(--border-medium);
-            border-radius: 8px;
-            width: calc(100% - 2px);
+            margin-top: 10px;
+            padding: 12px;
+            border: 1.5px solid var(--border-medium);
+            border-radius: 10px;
+            width: 100%;
             box-sizing: border-box;
-            background-color: #fcfcfc; /* Fundo mais claro */
+            background-color: #fcfcfc;
             cursor: pointer;
-            transition: all 0.3s ease-in-out;
+            transition: all 0.2s;
         }
         input[type="file"]:hover {
             border-color: var(--primary-blue);
-            box-shadow: 0 0 0 3px rgba(0, 100, 180, 0.1);
+            box-shadow: 0 0 0 3px rgba(0, 100, 180, 0.10);
         }
 
         button[type="submit"] {
-            background-color: var(--primary-blue);
+            background: linear-gradient(90deg, #0064B4 60%, #0099e6 100%);
             color: var(--white);
-            padding: 15px 35px; /* Botão maior */
+            padding: 16px 38px;
             border: none;
-            border-radius: 8px;
+            border-radius: 12px;
             cursor: pointer;
-            font-size: 1.15em; /* Texto maior */
-            font-weight: 600;
-            transition: all 0.3s ease-in-out;
-            box-shadow: 0 5px 15px var(--shadow-brand);
+            font-size: 1.15em;
+            font-weight: 800;
+            transition: all 0.2s;
+            box-shadow: 0 6px 20px var(--shadow-brand);
             letter-spacing: 0.02em;
+            margin-top: 18px;
         }
         button[type="submit"]:hover {
-            background-color: var(--dark-blue); /* Azul mais escuro no hover */
-            transform: translateY(-3px); /* Efeito de elevação maior */
-            box-shadow: 0 8px 20px var(--shadow-brand-hover);
+            background: #003366;
+            color: #fff;
+            transform: translateY(-2px) scale(1.03);
+            box-shadow: 0 12px 32px var(--shadow-brand-hover);
         }
 
         .flash-message {
-            padding: 15px 20px; /* Mais padding */
-            margin-bottom: 25px; /* Mais margem */
-            border-radius: 10px; /* Mais arredondado */
-            font-weight: 600; /* Mais forte */
+            padding: 15px 20px;
+            margin-bottom: 25px;
+            border-radius: 10px;
+            font-weight: 700;
             font-size: 1em;
             line-height: 1.5;
             box-shadow: 0 2px 8px var(--shadow-light);
@@ -182,85 +208,82 @@
         .flash-message.warning { background-color: var(--warning-bg); color: var(--warning-text); border: 1px solid var(--warning-border); }
 
         .current-image {
-            max-width: 150px; /* Maior visualização */
+            max-width: 150px;
             height: auto;
-            border-radius: 10px; /* Cantos mais suaves */
-            margin: 15px auto; /* Centraliza a imagem */
-            border: 3px solid var(--primary-blue); /* Borda da cor principal */
-            box-shadow: 0 4px 12px var(--shadow-strong);
+            border-radius: 12px;
+            margin: 15px auto;
+            border: 3px solid var(--primary-blue);
+            box-shadow: 0 4px 16px var(--shadow-strong);
             display: block;
         }
         .info-text {
-            font-size: 0.8em; /* Levemente menor para ser discreto */
+            font-size: 0.9em;
             color: var(--text-medium);
             margin-top: 8px;
             line-height: 1.5;
-            padding: 0 5px; /* Pequeno padding para leitura */
+            padding: 0 5px;
         }
 
         .bottom-link {
-            margin-top: 35px; /* Mais espaço para o link */
+            margin-top: 35px;
             font-size: 1.1em;
         }
         .bottom-link a {
             color: var(--primary-blue);
             text-decoration: none;
-            font-weight: 600;
-            transition: all 0.3s ease-in-out;
-            padding: 5px 10px; /* Área clicável maior */
-            border-radius: 5px;
+            font-weight: 700;
+            transition: all 0.2s;
+            padding: 7px 14px;
+            border-radius: 7px;
         }
         .bottom-link a:hover {
             text-decoration: underline;
             color: var(--dark-blue);
-            background-color: rgba(0, 100, 180, 0.05); /* Fundo suave no hover */
+            background-color: rgba(0, 100, 180, 0.07);
         }
 
-        /* Estilos para os botões de sugestão de cor */
         .color-suggestions {
             display: flex;
             flex-wrap: wrap;
-            gap: 12px; /* Mais espaço */
-            margin-top: 20px;
+            gap: 14px;
+            margin-top: 18px;
             justify-content: center;
-            padding-bottom: 20px;
-            border-bottom: 1px solid var(--border-light); /* Borda mais suave */
-            margin-bottom: 25px;
+            padding-bottom: 18px;
+            border-bottom: 1px solid var(--border-light);
+            margin-bottom: 22px;
         }
         .color-swatch {
-            width: 35px; /* Bolinhas maiores */
-            height: 35px;
+            width: 36px;
+            height: 36px;
             border-radius: 50%;
             cursor: pointer;
-            border: 3px solid var(--border-light); /* Borda mais grossa */
-            transition: all 0.2s ease;
+            border: 3px solid var(--border-light);
+            transition: all 0.18s;
             box-shadow: 0 2px 5px var(--shadow-light);
         }
         .color-swatch:hover {
             border-color: var(--primary-blue);
-            transform: scale(1.15); /* Efeito mais pronunciado */
+            transform: scale(1.13);
             box-shadow: 0 4px 10px var(--shadow-medium);
         }
         .color-swatch.selected {
-            border-color: var(--primary-blue); /* Borda ao selecionar */
-            box-shadow: 0 0 0 4px rgba(0, 100, 180, 0.3); /* Anel de seleção */
+            border-color: var(--primary-blue);
+            box-shadow: 0 0 0 4px rgba(0, 100, 180, 0.3);
         }
 
-        @media (max-width: 650px) {
+        @media (max-width: 700px) {
             .container {
-                padding: 25px;
-                margin: 20px auto;
-                border-radius: 10px;
-                box-shadow: 0 5px 15px var(--shadow-light);
+                padding: 24px 6px 18px 6px;
+                border-radius: 12px;
             }
             h2 {
-                font-size: 2em;
-                margin-bottom: 20px;
+                font-size: 1.5em;
+                margin-bottom: 18px;
             }
             .section-title {
-                font-size: 1.3em;
-                margin-top: 30px;
-                margin-bottom: 20px;
+                font-size: 1.1em;
+                margin-top: 24px;
+                margin-bottom: 12px;
             }
             input[type="text"], input[type="url"], textarea, input[type="color"], select, input[type="file"] {
                 padding: 10px;
@@ -269,7 +292,7 @@
             button[type="submit"] {
                 padding: 12px 25px;
                 font-size: 1.05em;
-                margin-top: 25px;
+                margin-top: 18px;
             }
             .flash-message {
                 padding: 10px 12px;
@@ -281,7 +304,7 @@
                 border-width: 2px;
             }
             .info-text {
-                font-size: 0.75em;
+                font-size: 0.8em;
             }
             .color-swatch {
                 width: 28px;
@@ -344,6 +367,8 @@
                     <p class="info-text">Nenhuma foto de perfil enviada ainda.</p>
                 {% endif %}
                 <input type="file" id="profile_pic_file" name="profile_pic_file" accept="image/*">
+                <div class="upload-spinner" id="profile-pic-spinner"></div>
+                <div class="upload-error" id="profile-pic-error"></div>
                 <p class="info-text">Máximo {{ max_upload_size_mb | round(0) }} MB. Formatos: PNG, JPG, JPEG, GIF, WebP.</p>
             </div>
 
@@ -365,6 +390,8 @@
                     <p class="info-text">Nenhuma logo enviada ainda. Será usada a logo padrão da plataforma, se não houver.</p>
                 {% endif %}
                 <input type="file" id="logo_file" name="logo_file" accept="image/*">
+                <div class="upload-spinner" id="logo-spinner"></div>
+                <div class="upload-error" id="logo-error"></div>
                 <p class="info-text">Máximo {{ max_upload_size_mb | round(0) }} MB. Formatos: PNG, JPG, JPEG, GIF, WebP. Ideal para logos pequenas e quadradas.</p>
             </div>
 
@@ -443,8 +470,45 @@
     </div>
 
     <script>
+        // Função utilitária para mostrar/hide spinner e erro
+        function showSpinner(id, show) {
+            const el = document.getElementById(id);
+            if (el) el.style.display = show ? 'block' : 'none';
+        }
+        function showError(id, msg) {
+            const el = document.getElementById(id);
+            if (el) {
+                el.textContent = msg;
+                el.style.display = msg ? 'block' : 'none';
+            }
+        }
         // JavaScript para validação de URL no frontend
         document.addEventListener('DOMContentLoaded', function() {
+            // Upload spinner e erro para foto de perfil
+            const profilePicInput = document.getElementById('profile_pic_file');
+            if (profilePicInput) {
+                profilePicInput.addEventListener('change', function() {
+                    showError('profile-pic-error', '');
+                    if (!profilePicInput.files || !profilePicInput.files[0]) return;
+                    showSpinner('profile-pic-spinner', true);
+                    // Simula delay de upload (remova se usar upload AJAX real)
+                    setTimeout(() => {
+                        showSpinner('profile-pic-spinner', false);
+                    }, 1200);
+                });
+            }
+            // Upload spinner e erro para logo
+            const logoInput = document.getElementById('logo_file');
+            if (logoInput) {
+                logoInput.addEventListener('change', function() {
+                    showError('logo-error', '');
+                    if (!logoInput.files || !logoInput.files[0]) return;
+                    showSpinner('logo-spinner', true);
+                    setTimeout(() => {
+                        showSpinner('logo-spinner', false);
+                    }, 1200);
+                });
+            }
             // --- Vercel Blob Upload ---
             // Substitua pelo seu token Blob
             const BLOB_TOKEN = 'vercel_blob_rw_FP7mWQXORFKddKwK_dDoOYbqAcQMgXO1fomQtcyF0x7P5r2';
@@ -462,6 +526,8 @@
                     document.getElementById('profile_pic_filename').value = '';
                     removeProfilePicBtn.closest('.form-group').querySelector('.current-image').src = '';
                     removeProfilePicBtn.closest('.form-group').querySelector('.current-image').style.display = 'none';
+                    showError('profile-pic-error', '');
+                    showSpinner('profile-pic-spinner', false);
                 });
             }
 
@@ -472,6 +538,8 @@
                     document.getElementById('logo_filename').value = '';
                     removeLogoBtn.closest('.form-group').querySelector('.current-image').src = '';
                     removeLogoBtn.closest('.form-group').querySelector('.current-image').style.display = 'none';
+                    showError('logo-error', '');
+                    showSpinner('logo-spinner', false);
                 });
             }
             function createOtherLinkField(nameValue = '', urlValue = '') {

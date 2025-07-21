@@ -72,6 +72,9 @@
             </div>
             <button type="submit">Entrar</button>
         </form>
+        <div style="margin-top:10px;">
+            <a href="{{ url_for('forgot_password') }}">Esqueci minha senha?</a>
+        </div>
         <hr>
         <a href="{{ url_for('google.login') }}" class="btn btn-outline-primary" style="width:100%;margin-top:10px;">
             <i class="fab fa-google"></i> Entrar com Google

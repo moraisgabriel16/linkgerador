@@ -205,6 +205,7 @@ def register():
     return render_template('register.html')
 
 
+
 # Rota para confirmação de e-mail
 @app.route('/confirm/<token>')
 def confirm_email(token):
@@ -223,6 +224,52 @@ def confirm_email(token):
     else:
         flash('Usuário não encontrado.', 'danger')
     return redirect(url_for('login'))
+
+# --- Esqueci a senha ---
+@app.route('/forgot_password', methods=['GET', 'POST'])
+def forgot_password():
+    if request.method == 'POST':
+        email = request.form.get('email')
+        user = users_collection.find_one({'email': email})
+        if user:
+            token = serializer.dumps(email, salt='reset-password')
+            reset_url = url_for('reset_password', token=token, _external=True)
+            html = render_template('reset_password_email.html', reset_url=reset_url, full_name=user.get('full_name', ''))
+            try:
+                msg = Message('Redefinição de senha', recipients=[email], html=html)
+                mail.send(msg)
+                flash('Um e-mail com instruções para redefinir sua senha foi enviado.', 'info')
+            except Exception as e:
+                flash(f'Erro ao enviar e-mail: {e}', 'danger')
+        else:
+            flash('E-mail não encontrado.', 'danger')
+        return redirect(url_for('login'))
+    return render_template('forgot_password.html')
+
+@app.route('/reset_password/<token>', methods=['GET', 'POST'])
+def reset_password(token):
+    try:
+        email = serializer.loads(token, salt='reset-password', max_age=3600*2)  # 2h
+    except Exception:
+        flash('O link de redefinição é inválido ou expirou.', 'danger')
+        return redirect(url_for('login'))
+    if request.method == 'POST':
+        password = request.form.get('password')
+        confirm_password = request.form.get('confirm_password')
+        if not password or not confirm_password:
+            flash('Preencha todos os campos.', 'danger')
+            return render_template('reset_password.html', token=token)
+        if password != confirm_password:
+            flash('As senhas não coincidem.', 'danger')
+            return render_template('reset_password.html', token=token)
+        if len(password) < 8:
+            flash('A senha deve ter pelo menos 8 caracteres.', 'danger')
+            return render_template('reset_password.html', token=token)
+        hashed_password = generate_password_hash(password)
+        users_collection.update_one({'email': email}, {'$set': {'password': hashed_password}})
+        flash('Senha redefinida com sucesso! Faça login.', 'success')
+        return redirect(url_for('login'))
+    return render_template('reset_password.html', token=token)
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():

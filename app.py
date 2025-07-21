@@ -1,4 +1,6 @@
 from flask import Flask, render_template, request, redirect, url_for, flash, session, current_app
+from flask_mail import Mail, Message
+from itsdangerous import URLSafeTimedSerializer
 from pymongo import MongoClient
 from werkzeug.security import generate_password_hash, check_password_hash
 from werkzeug.utils import secure_filename
@@ -13,7 +15,18 @@ from bson.objectid import ObjectId
 from flask_dance.contrib.google import make_google_blueprint, google
 from flask_dance.consumer import OAuth2ConsumerBlueprint
 
+# --- Configuração do Flask-Mail ---
 app = Flask(__name__)
+app.config['MAIL_SERVER'] = os.environ.get('MAIL_SERVER', 'smtp.gmail.com')
+app.config['MAIL_PORT'] = int(os.environ.get('MAIL_PORT', 587))
+app.config['MAIL_USE_TLS'] = True
+app.config['MAIL_USERNAME'] = os.environ.get('MAIL_USERNAME', 'seu_email@gmail.com')
+app.config['MAIL_PASSWORD'] = os.environ.get('MAIL_PASSWORD', 'sua_senha')
+app.config['MAIL_DEFAULT_SENDER'] = os.environ.get('MAIL_DEFAULT_SENDER', 'seu_email@gmail.com')
+mail = Mail(app)
+
+# Serializer para tokens de confirmação
+serializer = URLSafeTimedSerializer(app.secret_key)
 # --- Configuração do Cloudinary ---
 cloudinary.config(
     cloud_name = 'djqeq4f2l',
@@ -131,6 +144,7 @@ def privacy_policy():
 def home():
     return render_template('home.html')
 
+
 @app.route('/register', methods=['GET', 'POST'])
 def register():
     if request.method == 'POST':
@@ -162,17 +176,50 @@ def register():
 
         hashed_password = generate_password_hash(password)
 
+        # Usuário começa como não confirmado
         new_user = {
             'full_name': full_name,
             'username': username,
             'email': email,
-            'password': hashed_password
+            'password': hashed_password,
+            'confirmed': False
         }
         users_collection.insert_one(new_user)
-        flash('Cadastro realizado com sucesso! Faça login para continuar.', 'success')
+
+        # Envia e-mail de confirmação
+        token = serializer.dumps(email, salt='email-confirm')
+        confirm_url = url_for('confirm_email', token=token, _external=True)
+        html = render_template('email_confirmation.html', confirm_url=confirm_url, full_name=full_name)
+        try:
+            msg = Message('Confirme seu cadastro', recipients=[email], html=html)
+            mail.send(msg)
+            flash('Cadastro realizado! Verifique seu e-mail para confirmar o registro.', 'success')
+        except Exception as e:
+            flash(f'Erro ao enviar e-mail de confirmação: {e}', 'danger')
+
         return redirect(url_for('login'))
 
     return render_template('register.html')
+
+
+# Rota para confirmação de e-mail
+@app.route('/confirm/<token>')
+def confirm_email(token):
+    try:
+        email = serializer.loads(token, salt='email-confirm', max_age=3600*24)  # 24h
+    except Exception:
+        flash('O link de confirmação é inválido ou expirou.', 'danger')
+        return redirect(url_for('login'))
+    user = users_collection.find_one({'email': email})
+    if user:
+        if user.get('confirmed'):
+            flash('Conta já confirmada. Faça login.', 'info')
+        else:
+            users_collection.update_one({'_id': user['_id']}, {'$set': {'confirmed': True}})
+            flash('E-mail confirmado com sucesso! Agora você pode fazer login.', 'success')
+    else:
+        flash('Usuário não encontrado.', 'danger')
+    return redirect(url_for('login'))
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():

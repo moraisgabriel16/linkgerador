@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Confirmação de Cadastro</title>
+</head>
+<body>
+    <h2>Olá, {{ full_name }}!</h2>
+    <p>Obrigado por se registrar. Para ativar sua conta, clique no link abaixo:</p>
+    <p><a href="{{ confirm_url }}">Confirmar meu cadastro</a></p>
+    <p>Se você não se registrou, ignore este e-mail.</p>
+    <hr>
+    <small>Este link expira em 24 horas.</small>
+</body>
+</html>

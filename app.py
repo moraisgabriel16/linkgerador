@@ -15,8 +15,13 @@ from bson.objectid import ObjectId
 from flask_dance.contrib.google import make_google_blueprint, google
 from flask_dance.consumer import OAuth2ConsumerBlueprint
 
-# --- Configuração do Flask-Mail ---
+# --- Inicialização do Flask e SECRET_KEY ---
 app = Flask(__name__)
+# MUDE ISSO PARA UMA CHAVE FORTE E ÚNICA EM PRODUÇÃO!
+# Gere uma string aleatória longa para produção. Ex: os.urandom(24).hex()
+app.secret_key = os.environ.get('SECRET_KEY', 'sua_chave_secreta_aqui_para_sessoes_muito_segura_e_longa_para_producao')
+
+# --- Configuração do Flask-Mail ---
 app.config['MAIL_SERVER'] = os.environ.get('MAIL_SERVER', 'smtp.gmail.com')
 app.config['MAIL_PORT'] = int(os.environ.get('MAIL_PORT', 587))
 app.config['MAIL_USE_TLS'] = True
@@ -27,6 +32,7 @@ mail = Mail(app)
 
 # Serializer para tokens de confirmação
 serializer = URLSafeTimedSerializer(app.secret_key)
+
 # --- Configuração do Cloudinary ---
 cloudinary.config(
     cloud_name = 'djqeq4f2l',
@@ -34,9 +40,6 @@ cloudinary.config(
     api_secret = 'gYvTTXlzjjO_8rxd9oB627674tc',
     secure = True
 )
-# MUDE ISSO PARA UMA CHAVE FORTE E ÚNICA EM PRODUÇÃO!
-# Gere uma string aleatória longa para produção. Ex: os.urandom(24).hex()
-app.secret_key = 'sua_chave_secreta_aqui_para_sessoes_muito_segura_e_longa_para_producao'
 
 # --- Configuração do MongoDB Atlas ---
 # IMPORTANTE: Em ambiente de produção, use variáveis de ambiente!

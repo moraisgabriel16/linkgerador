@@ -30,6 +30,7 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
+      flex-wrap: wrap;
     }
 
     .logo {
@@ -46,9 +47,13 @@
       margin-right: 10px;
     }
 
+    .nav-buttons {
+      display: flex;
+      gap: 10px;
+    }
+
     .nav-buttons a {
       text-decoration: none;
-      margin-left: 10px;
       padding: 8px 15px;
       border-radius: 8px;
       font-weight: 500;
@@ -201,7 +206,29 @@
       color: #aad4ff;
     }
 
+    /* Responsivo para telas pequenas */
     @media (max-width: 576px) {
+      header {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .logo {
+        margin-bottom: 10px;
+      }
+
+      .nav-buttons {
+        flex-direction: column;
+        align-items: flex-start;
+        width: 100%;
+        gap: 8px;
+      }
+
+      .nav-buttons a {
+        width: 100%;
+        text-align: center;
+      }
+
       .hero-container h1 {
         font-size: 1.8rem;
       }

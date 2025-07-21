@@ -3,34 +3,29 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Link-in-Bio - Centralize sua presença online</title>
-  <link rel="icon" type="image/png" href="/static/logo.png">
-  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-
+  <title>Bem-vindo ao Link-in-Bio</title>
+  <link rel="icon" type="image/png" href="{{ url_for('static', filename='logo.png') }}">
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
   <style>
-    body {
-      font-family: 'Roboto', sans-serif;
-      background: linear-gradient(135deg, #f8f9fa, #ffffff);
+    * {
+      box-sizing: border-box;
       margin: 0;
-      padding-top: 80px;
+      padding: 0;
+      font-family: 'Roboto', sans-serif;
+    }
+
+    body {
+      background-color: #000;
+      color: #fff;
+      line-height: 1.6;
     }
 
     header {
-      background-color: #ffffff;
-      padding: 15px 20px;
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      z-index: 1000;
-      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
       display: flex;
       justify-content: space-between;
       align-items: center;
-      flex-wrap: wrap;
+      padding: 20px 40px;
+      background-color: #111;
     }
 
     .logo {
@@ -38,8 +33,6 @@
       align-items: center;
       font-size: 1.5rem;
       font-weight: bold;
-      color: #002e5c;
-      text-decoration: none;
     }
 
     .logo img {
@@ -54,183 +47,88 @@
 
     .nav-buttons a {
       text-decoration: none;
-      padding: 8px 15px;
-      border-radius: 8px;
-      font-weight: 500;
-      font-size: 0.95rem;
-      transition: all 0.2s ease-in-out;
+      color: #fff;
+      background-color: #e91e63;
+      padding: 10px 20px;
+      border-radius: 5px;
+      font-weight: bold;
+      transition: background-color 0.3s;
     }
 
-    .btn-login {
-      color: #0064B4;
-      border: 1px solid #0064B4;
-      background-color: transparent;
-    }
-
-    .btn-login:hover {
-      background-color: #0064B4;
-      color: white;
-    }
-
-    .btn-register {
-      background-color: #0064B4;
-      color: white;
-      border: 1px solid #0064B4;
-    }
-
-    .btn-register:hover {
-      background-color: #004F90;
+    .nav-buttons a:hover {
+      background-color: #c2185b;
     }
 
     .hero-container {
       text-align: center;
-      max-width: 800px;
-      margin: auto;
-      padding: 40px 20px;
+      padding: 60px 20px;
     }
 
     .hero-container h1 {
-      font-size: 2.2rem;
-      font-weight: 700;
-      color: #002E5C;
+      font-size: 2.5rem;
       margin-bottom: 20px;
     }
 
     .hero-container p {
-      font-size: 1.05rem;
-      color: #555;
+      font-size: 1.2rem;
       margin-bottom: 30px;
+      color: #ccc;
     }
 
-    .button-group a {
+    .hero-container a {
       display: inline-block;
-      margin: 10px 10px 0 0;
-      padding: 12px 24px;
-      border-radius: 10px;
-      font-weight: 500;
-      font-size: 1rem;
       text-decoration: none;
-      transition: 0.3s ease;
+      color: #fff;
+      background-color: #e91e63;
+      padding: 12px 25px;
+      border-radius: 5px;
+      font-weight: bold;
+      transition: background-color 0.3s;
     }
 
-    .btn-primary-cta {
-      background-color: #0064B4;
-      color: white;
-      border: 2px solid #0064B4;
+    .hero-container a:hover {
+      background-color: #c2185b;
     }
 
-    .btn-primary-cta:hover {
-      background-color: #004F90;
-      transform: translateY(-3px);
-    }
-
-    .btn-secondary-cta {
-      background-color: transparent;
-      color: #0064B4;
-      border: 2px solid #0064B4;
-    }
-
-    .btn-secondary-cta:hover {
-      background-color: #0064B4;
-      color: white;
-      transform: translateY(-3px);
-    }
-
-    .how-it-works {
-      background-color: #f1f3f5;
-      padding: 50px 20px;
-      margin-top: 30px;
-      border-radius: 20px;
-      text-align: center;
-    }
-
-    .how-it-works h2 {
-      color: #002E5C;
-      font-size: 2rem;
-      margin-bottom: 40px;
-    }
-
-    .steps-container {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      gap: 30px;
-    }
-
-    .step {
-      background-color: #ffffff;
-      border-radius: 15px;
-      padding: 30px;
-      max-width: 300px;
-      min-width: 260px;
-      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.07);
-      transition: transform 0.2s ease;
-    }
-
-    .step:hover {
-      transform: translateY(-5px);
-    }
-
-    .step i {
-      font-size: 2.5rem;
-      color: #0064B4;
-      margin-bottom: 15px;
-    }
-
-    .step h3 {
-      font-size: 1.3rem;
-      color: #333;
-      margin-bottom: 10px;
-    }
-
-    .step p {
-      color: #555;
-      font-size: 1rem;
-    }
-
-    footer {
-      background-color: #002E5C;
-      color: white;
-      padding: 20px;
-      text-align: center;
-      font-size: 0.9rem;
-    }
-
-    footer a {
-      color: #ffffff;
-      text-decoration: none;
-    }
-
-    footer a:hover {
-      text-decoration: underline;
-      color: #aad4ff;
-    }
-
-    /* Responsivo para telas pequenas */
     @media (max-width: 576px) {
       header {
-        flex-direction: column;
-        align-items: flex-start;
+        flex-direction: row;
+        flex-wrap: wrap;
+        justify-content: space-between;
+        align-items: center;
+        padding: 12px 16px;
       }
 
       .logo {
-        margin-bottom: 10px;
+        font-size: 1.2rem;
+        margin-bottom: 0;
+        display: flex;
+        align-items: center;
+      }
+
+      .logo img {
+        height: 32px;
+        margin-right: 8px;
       }
 
       .nav-buttons {
-        flex-direction: column;
-        align-items: flex-start;
-        width: 100%;
-        gap: 8px;
+        display: flex;
+        gap: 6px;
+        flex-wrap: nowrap;
       }
 
       .nav-buttons a {
-        width: 100%;
-        text-align: center;
+        padding: 6px 12px;
+        font-size: 0.85rem;
+        white-space: nowrap;
       }
 
       .hero-container h1 {
-        font-size: 1.8rem;
+        font-size: 1.6rem;
+      }
+
+      .hero-container p {
+        font-size: 1rem;
       }
     }
   </style>
@@ -238,52 +136,21 @@
 <body>
 
   <header>
-    <a href="/" class="logo">
-      <img src="/static/logo.png" alt="Logo"> Link-in-Bio
-    </a>
+    <div class="logo">
+      <img src="{{ url_for('static', filename='logo.png') }}" alt="Logo">
+      Link-in-Bio
+    </div>
     <div class="nav-buttons">
-      <a href="/login" class="btn-login">Entrar</a>
-      <a href="/register" class="btn-register">Cadastrar</a>
+      <a href="/login">Entrar</a>
+      <a href="/cadastro">Cadastrar</a>
     </div>
   </header>
 
-  <main>
-    <div class="hero-container">
-      <h1>Centralize Sua Presença Online em Um Único Link!</h1>
-      <p>Crie sua página de Link-in-Bio personalizada: reúna todos os seus links importantes de forma elegante e fácil de compartilhar, otimizada para todas as suas plataformas sociais.</p>
-      <div class="button-group">
-        <a href="/register" class="btn-primary-cta">Criar Meu Link Grátis</a>
-        <a href="/login" class="btn-secondary-cta">Já Tenho Conta</a>
-      </div>
-    </div>
-
-    <section class="how-it-works">
-      <h2>Como Funciona em 3 Passos Simples</h2>
-      <div class="steps-container">
-        <div class="step">
-          <i class="fas fa-user-plus"></i>
-          <h3>1. Cadastre-se Grátis</h3>
-          <p>Crie sua conta em segundos e comece a construir sua página.</p>
-        </div>
-        <div class="step">
-          <i class="fas fa-link"></i>
-          <h3>2. Adicione seus Links</h3>
-          <p>Personalize sua página com todos os seus links importantes e redes sociais.</p>
-        </div>
-        <div class="step">
-          <i class="fas fa-share-alt"></i>
-          <h3>3. Compartilhe seu Link</h3>
-          <p>Divulgue seu Link-in-Bio único em todas as suas plataformas e bio do Instagram.</p>
-        </div>
-      </div>
-    </section>
-  </main>
-
-  <footer>
-    &copy; 2025 <a href="https://www.moraisdigitalsolutions.site" target="_blank">Morais Digital</a>. Todos os direitos reservados |
-    <a href="/terms">Termos de Serviço</a> |
-    <a href="/privacy">Política de Privacidade</a>
-  </footer>
+  <div class="hero-container">
+    <h1>Centralize seus links em um só lugar</h1>
+    <p>Crie seu link personalizado e compartilhe com seus seguidores.</p>
+    <a href="/cadastro">Comece agora</a>
+  </div>
 
 </body>
 </html>

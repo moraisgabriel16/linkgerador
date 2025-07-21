@@ -11,16 +11,16 @@
     <style>
         :root {
             --primary-blue: #0064B4;
-            --dark-blue: #002E5C;
-            --light-gray: #F0F2F5;
-            --white: #FFFFFF;
-            --text-dark: #333333;
-            --text-medium: #555555;
-            --border-light: #E0E0E0;
-            --border-medium: #c9c9c9;
-            --shadow-light: rgba(0, 0, 0, 0.05);
-            --shadow-medium: rgba(0, 0, 0, 0.1);
-            --shadow-strong: rgba(0, 0, 0, 0.15);
+            --dark-blue: #003366;
+            --light-gray: #f4faff;
+            --white: #fff;
+            --text-dark: #222;
+            --text-medium: #4a5a6a;
+            --border-light: #e3e8ee;
+            --border-medium: #b3d8f7;
+            --shadow-light: rgba(0, 100, 180, 0.06);
+            --shadow-medium: rgba(0, 100, 180, 0.13);
+            --shadow-strong: rgba(0, 100, 180, 0.18);
             --success-bg: #e6ffed;
             --success-text: #1f6b3b;
             --success-border: #b7e4c7;
@@ -34,7 +34,7 @@
 
         body {
             font-family: 'Roboto', sans-serif;
-            background: var(--light-gray);
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9f1fa 100%);
             color: var(--text-dark);
             display: flex;
             flex-direction: column;
@@ -42,28 +42,28 @@
             align-items: center;
             min-height: 100vh;
             margin: 0;
-            padding: 20px;
+            padding: 32px 8px;
             box-sizing: border-box;
-            line-height: 1.6;
+            line-height: 1.7;
         }
 
         .container {
-            background-color: var(--white);
-            padding: 40px;
-            border-radius: 15px;
-            box-shadow: 0 10px 25px var(--shadow-medium);
-            max-width: 650px;
+            background: var(--white);
+            padding: 48px 36px 38px 36px;
+            border-radius: 22px;
+            box-shadow: 0 8px 32px var(--shadow-medium);
+            max-width: 700px;
             width: 100%;
             text-align: center;
-            border: 1px solid var(--border-light);
+            border: 1.5px solid var(--border-light);
         }
 
         h2 {
             color: var(--dark-blue);
-            margin-bottom: 30px;
-            font-size: 2.5em;
-            font-weight: 700;
-            letter-spacing: -0.02em;
+            margin-bottom: 32px;
+            font-size: 2.3em;
+            font-weight: 800;
+            letter-spacing: -0.03em;
         }
 
         .flash-message {
@@ -80,50 +80,49 @@
         .flash-message.danger { background-color: var(--danger-bg); color: var(--danger-text); border: 1px solid var(--danger-border); }
         .flash-message.info { background-color: var(--info-bg); color: var(--info-text); border: 1px solid var(--info-border); }
 
-
-        /* Seção de Resumo do Perfil */
         .profile-summary {
-            background-color: var(--light-gray);
-            border-radius: 10px;
-            padding: 25px;
-            margin-bottom: 30px;
-            box-shadow: inset 0 1px 5px var(--shadow-light);
+            background: linear-gradient(120deg, #e9f1fa 60%, #f8f9fa 100%);
+            border-radius: 16px;
+            padding: 32px 18px 24px 18px;
+            margin-bottom: 36px;
+            box-shadow: 0 4px 18px var(--shadow-light);
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 15px;
+            gap: 18px;
             text-align: center;
+            border: 1.5px solid var(--border-light);
         }
         .profile-summary h3 {
             color: var(--primary-blue);
-            font-size: 1.8em;
-            font-weight: 700;
-            margin-bottom: 10px;
+            font-size: 1.5em;
+            font-weight: 800;
+            margin-bottom: 8px;
         }
         .profile-summary .profile-images {
             display: flex;
-            gap: 20px;
+            gap: 24px;
             justify-content: center;
             align-items: center;
             margin-bottom: 10px;
         }
         .profile-summary .profile-image-wrapper {
             position: relative;
-            width: 100px;
-            height: 100px;
+            width: 96px;
+            height: 96px;
             border-radius: 50%;
             border: 3px solid var(--primary-blue);
             overflow: hidden;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
-            background-color: var(--white);
+            box-shadow: 0 4px 16px rgba(0, 100, 180, 0.13);
+            background: var(--white);
             display: flex;
             justify-content: center;
             align-items: center;
         }
         .profile-summary .profile-image-wrapper.logo {
-            border-radius: 10px;
+            border-radius: 12px;
             width: 120px;
-            height: auto;
+            height: 60px;
             min-height: 60px;
             max-width: 120px;
         }
@@ -142,35 +141,35 @@
         }
 
         .profile-info p {
-            margin: 5px 0;
+            margin: 6px 0;
             color: var(--text-dark);
-            font-size: 1.05em;
+            font-size: 1.08em;
         }
         .profile-info strong {
-            font-weight: 600;
+            font-weight: 700;
             color: var(--dark-blue);
         }
 
         .profile-info .status-text {
-            font-size: 0.95em;
-            font-weight: 500;
+            font-size: 1em;
+            font-weight: 600;
             color: var(--text-medium);
         }
         .profile-info .status-text .active {
             color: var(--success-text);
-            font-weight: 700;
+            font-weight: 800;
         }
 
         .profile-link {
-            font-size: 1.15em;
-            margin-top: 15px;
+            font-size: 1.13em;
+            margin-top: 16px;
             word-break: break-all;
         }
         .profile-link a {
             color: var(--primary-blue);
             text-decoration: none;
-            font-weight: bold;
-            transition: color 0.2s ease;
+            font-weight: 700;
+            transition: color 0.2s;
         }
         .profile-link a:hover {
             color: var(--dark-blue);
@@ -178,71 +177,75 @@
         }
 
         .button-group {
-            margin-top: 30px;
+            margin-top: 32px;
             display: flex;
             flex-wrap: wrap;
             justify-content: center;
-            gap: 15px;
+            gap: 18px;
         }
         .button-group a {
             display: flex;
             align-items: center;
             justify-content: center;
-            background-color: var(--primary-blue);
-            color: white;
-            padding: 12px 25px;
-            border-radius: 8px;
+            background: linear-gradient(90deg, #0064B4 60%, #0099e6 100%);
+            color: #fff;
+            padding: 14px 32px;
+            border-radius: 12px;
             text-decoration: none;
-            font-weight: 500;
-            font-size: 1.05em;
-            transition: all 0.3s ease-in-out;
-            box-shadow: 0 4px 10px rgba(0, 100, 180, 0.2);
+            font-weight: 700;
+            font-size: 1.08em;
+            transition: all 0.2s;
+            box-shadow: 0 4px 16px var(--shadow-medium);
             min-width: 180px;
+            border: none;
+            gap: 10px;
         }
         .button-group a i {
-            margin-right: 10px;
+            margin-right: 8px;
         }
         .button-group a:hover {
-            background-color: var(--dark-blue);
-            transform: translateY(-3px);
-            box-shadow: 0 6px 15px rgba(0, 100, 180, 0.3);
+            background: #003366;
+            color: #fff;
+            transform: translateY(-2px) scale(1.03);
+            box-shadow: 0 8px 24px var(--shadow-strong);
         }
 
-        /* Estilo para o novo botão "Criar Novo Cartão" ou "Gerenciar Meu Cartão" */
         .button-group .main-action-button {
-            background-color: var(--primary-blue); /* Ou uma cor diferente para destacar */
-            box-shadow: 0 5px 15px rgba(0, 100, 180, 0.3);
+            background: linear-gradient(90deg, #0064B4 60%, #0099e6 100%);
+            box-shadow: 0 6px 20px var(--shadow-strong);
         }
         .button-group .main-action-button:hover {
-            background-color: var(--dark-blue);
-            transform: translateY(-4px);
-            box-shadow: 0 8px 20px rgba(0, 100, 180, 0.4);
+            background: #003366;
+            color: #fff;
+            transform: translateY(-3px) scale(1.04);
+            box-shadow: 0 12px 32px var(--shadow-strong);
         }
 
-        @media (max-width: 600px) {
+        @media (max-width: 700px) {
             .container {
-                padding: 30px 15px;
-                border-radius: 10px;
+                padding: 24px 6px 18px 6px;
+                border-radius: 12px;
             }
             h2 {
-                font-size: 2em;
-                margin-bottom: 25px;
+                font-size: 1.5em;
+                margin-bottom: 18px;
             }
             .profile-summary {
-                padding: 20px;
+                padding: 18px 4px 10px 4px;
+                border-radius: 10px;
             }
             .profile-summary .profile-images {
                 flex-direction: column;
                 gap: 10px;
             }
             .profile-summary .profile-image-wrapper {
-                width: 80px;
-                height: 80px;
+                width: 70px;
+                height: 70px;
             }
             .profile-summary .profile-image-wrapper.logo {
-                width: 100px;
-                min-height: 50px;
-                max-width: 100px;
+                width: 90px;
+                min-height: 40px;
+                max-width: 90px;
             }
             .profile-info p {
                 font-size: 1em;

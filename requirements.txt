@@ -7,3 +7,5 @@ Pillow
 authlib
 python-dotenv
 flask-dance
+Flask-Mail
+itsdangerous

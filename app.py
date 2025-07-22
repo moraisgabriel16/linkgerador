@@ -353,6 +353,11 @@ def edit_profile():
         background_color = request.form.get('background_color', 'linear-gradient(135deg, #F0F2F5, #FFFFFF)')
         custom_background_css = request.form.get('custom_background_css') # NOVO: Captura string CSS
         custom_slug = request.form.get('custom_slug')
+        # Captura os nomes dos botões personalizados
+        whatsapp_button_name = request.form.get('whatsapp_button_name', 'WhatsApp')
+        catalogo_button_name = request.form.get('catalogo_button_name', 'Catálogo')
+        website_button_name = request.form.get('website_button_name', 'Site')
+        instagram_button_name = request.form.get('instagram_button_name', 'Instagram')
 
         # Validação básica dos campos obrigatórios
         if not nome_vendedor or not cargo or not descricao:
@@ -509,7 +514,11 @@ def edit_profile():
             'slug_url': generated_slug,
             'background_color': background_color,
             'custom_background_css': custom_background_css, # Salva a string CSS do fundo
-            'other_links': other_links
+            'other_links': other_links,
+            'whatsapp_button_name': whatsapp_button_name,
+            'catalogo_button_name': catalogo_button_name,
+            'website_button_name': website_button_name,
+            'instagram_button_name': instagram_button_name
         }
 
         if user_profile:

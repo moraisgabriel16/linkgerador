@@ -238,27 +238,28 @@
       {{ profile.descricao }}
     </p>
 
+
     {% if profile.link_whatsapp %}
     <a href="{{ profile.link_whatsapp | trim }}" target="_blank" class="link-button whatsapp-button">
-      <i class="fab fa-whatsapp"></i> Converse pelo WhatsApp
+      <i class="fab fa-whatsapp"></i> {{ profile.whatsapp_button_name if profile.whatsapp_button_name else 'Converse pelo WhatsApp' }}
     </a>
     {% endif %}
 
     {% if profile.link_catalogo %}
     <a href="{{ profile.link_catalogo | trim }}" target="_blank" class="link-button catalog-button">
-      <i class="fas fa-book"></i> Baixe Nosso Catálogo
+      <i class="fas fa-book"></i> {{ profile.catalogo_button_name if profile.catalogo_button_name else 'Baixe Nosso Catálogo' }}
     </a>
     {% endif %}
 
     {% if profile.link_website %}
     <a href="{{ profile.link_website | trim }}" target="_blank" class="link-button website-button">
-      <i class="fas fa-globe"></i> Visite Nosso Site
+      <i class="fas fa-globe"></i> {{ profile.website_button_name if profile.website_button_name else 'Visite Nosso Site' }}
     </a>
     {% endif %}
 
     {% if profile.link_instagram %}
     <a href="{{ profile.link_instagram | trim }}" target="_blank" class="link-button instagram-button">
-      <i class="fab fa-instagram"></i> Siga no Instagram
+      <i class="fab fa-instagram"></i> {{ profile.instagram_button_name if profile.instagram_button_name else 'Siga no Instagram' }}
     </a>
     {% endif %}
 

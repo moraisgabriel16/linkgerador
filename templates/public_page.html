@@ -171,23 +171,51 @@
       margin-top: 30px;
       padding: 20px;
       text-align: center;
-      font-size: 14px;
-      color: #CCCCCC;
-      background-color: #002E5C;
-      border-top: 1px solid #00264D;
-      width: 100%;
-      box-sizing: border-box;
+      font-size: 15px;
+      color: #fff;
+      background: linear-gradient(135deg, #002E5C, #004F90);
+      border-radius: 0 0 15px 15px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    }
+
+    .footer p {
+      margin: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    .footer-brand {
+      font-weight: 600;
+      background: linear-gradient(120deg, #64B5F6, #2196F3);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin: 0 4px;
     }
 
     .footer a {
-      color: #FFFFFF;
+      color: #fff;
       text-decoration: none;
-      font-weight: 500;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      transition: all 0.3s ease;
     }
 
     .footer a:hover {
-      color: #ADD8E6;
-      text-decoration: underline;
+      transform: translateY(-2px);
+      text-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    }
+
+    .footer i.fa-heart {
+      animation: pulse 1.5s infinite;
+    }
+
+    @keyframes pulse {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.2); }
+      100% { transform: scale(1); }
     }
 
     @media (max-width: 600px) {
@@ -277,7 +305,11 @@
 
   <div class="footer">
     <p>
-      &copy; 2025 <a href="https://www.moraisdigitalsolutions.site/" target="_blank">Morais Digital</a>. Todos os direitos reservados.
+      Criado com <i class="fas fa-heart" style="color: #ff4b4b;"></i> usando 
+      <a href="https://linkgerador.vercel.app/" target="_blank">
+        <span class="footer-brand">Link-In-Bio</span>
+        <i class="fas fa-external-link-alt"></i>
+      </a>
     </p>
   </div>
 </body>

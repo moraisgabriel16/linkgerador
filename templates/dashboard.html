@@ -285,6 +285,7 @@
                         <img src="{{ user_profile.get('profile_pic_filename', 'https://res.cloudinary.com/djqeq4f2l/image/upload/v1/profile_pics/profile_pic_687eb3b3e6ff6695e5928ada') or 'https://res.cloudinary.com/djqeq4f2l/image/upload/v1/profile_pics/profile_pic_687eb3b3e6ff6695e5928ada' }}" alt="Sua Foto de Perfil">
                     </div>
                     {% if user_profile.logo_filename %}
+                        {% if user_profile.logo_filename and user_profile.logo_filename != 'None' %}
                         <div class="profile-image-wrapper logo">
                             {% if user_profile.logo_filename.startswith('http') %}
                                 <img src="{{ user_profile.logo_filename }}" alt="Logo da Empresa">
@@ -292,6 +293,7 @@
                                 <img src="{{ url_for('static', filename='uploads/' + user_profile.logo_filename) }}" alt="Logo da Empresa">
                             {% endif %}
                         </div>
+                        {% endif %}
                     {% else %}
                         <div class="profile-image-wrapper logo">
                              {# Fallback para logo padrão da plataforma #}

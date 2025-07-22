@@ -277,7 +277,7 @@
             {% endif %}
         {% endwith %}
 
-        <div class="profile-summary">
+        <div class="profile-summary" {% if user_profile and user_profile.background_color %}style="background: {{ user_profile.background_color }};"{% endif %}>
             {% if user_profile %}
                 <h3>Seu Cartão: {{ user_profile.nome_vendedor }}</h3>
                 <div class="profile-images">

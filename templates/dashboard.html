@@ -282,7 +282,7 @@
                 <h3>Seu Cartão: {{ user_profile.nome_vendedor }}</h3>
                 <div class="profile-images">
                     <div class="profile-image-wrapper">
-                        <img src="{{ user_profile.get('profile_pic_filename', 'default_profile.jpg') or 'default_profile.jpg' }}" alt="Sua Foto de Perfil">
+                        <img src="{{ user_profile.get('profile_pic_filename', 'https://res.cloudinary.com/djqeq4f2l/image/upload/v1/profile_pics/profile_pic_687eb3b3e6ff6695e5928ada') or 'https://res.cloudinary.com/djqeq4f2l/image/upload/v1/profile_pics/profile_pic_687eb3b3e6ff6695e5928ada' }}" alt="Sua Foto de Perfil">
                     </div>
                     {% if user_profile.logo_filename %}
                         <div class="profile-image-wrapper logo">

@@ -65,6 +65,79 @@ def allowed_file(filename):
     return '.' in filename and \
            filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
+def optimize_image_upload(file, max_width=800, max_height=800, quality=80):
+    """
+    Otimiza a imagem antes do upload para o Cloudinary
+    :param file: O arquivo de imagem
+    :param max_width: Largura máxima da imagem
+    :param max_height: Altura máxima da imagem
+    :param quality: Qualidade da compressão (1-100)
+    :return: BytesIO object da imagem otimizada
+    """
+    try:
+        img = Image.open(file)
+        
+        # Corrige orientação EXIF
+        if hasattr(Image, 'exif_transpose'):
+            img = Image.exif_transpose(img)
+        else:
+            try:
+                exif = img._getexif()
+                if exif:
+                    orientation = exif.get(274)
+                    if orientation == 3:
+                        img = img.rotate(180, expand=True)
+                    elif orientation == 6:
+                        img = img.rotate(270, expand=True)
+                    elif orientation == 8:
+                        img = img.rotate(90, expand=True)
+            except Exception:
+                pass
+
+        # Preserva o formato original da imagem
+        img_format = img.format if img.format else 'JPEG'
+        
+        # Redimensiona mantendo a proporção
+        img.thumbnail((max_width, max_height), Image.LANCZOS)
+        
+        # Converte para buffer
+        buffer = BytesIO()
+        img.save(buffer, format=img_format, quality=quality, optimize=True)
+        buffer.seek(0)
+        return buffer
+    except Exception as e:
+        print(f"Erro ao otimizar imagem: {e}")
+        file.seek(0)
+        return file
+
+def upload_to_cloudinary(file, folder, public_id, **options):
+    """
+    Faz upload da imagem para o Cloudinary com configurações otimizadas
+    :param file: O arquivo de imagem
+    :param folder: Pasta no Cloudinary
+    :param public_id: ID público da imagem
+    :param options: Opções adicionais do Cloudinary
+    :return: Resultado do upload
+    """
+    try:
+        # Configurações padrão do Cloudinary
+        upload_options = {
+            'folder': folder,
+            'public_id': public_id,
+            'overwrite': True,
+            'resource_type': "image",
+            'transformation': [
+                {'quality': 'auto:good'},
+                {'fetch_format': 'auto'},
+            ]
+        }
+        upload_options.update(options)
+        
+        return cloudinary.uploader.upload(file, **upload_options)
+    except Exception as e:
+        print(f"Erro no upload para Cloudinary: {e}")
+        raise e
+
 # --- Funções Auxiliares de Lógica ---
 def generate_unique_slug(name, user_id, current_slug=None):
     """Gera um slug URL-friendly, garantindo que seja único para o usuário ou em geral."""
@@ -381,47 +454,25 @@ def edit_profile():
         else:
             profile_pic_file = request.files.get('profile_pic_file')
             if profile_pic_file and allowed_file(profile_pic_file.filename):
-                # Compressão da imagem antes do upload
                 try:
-                    img = Image.open(profile_pic_file)
-                    # Corrige orientação EXIF se necessário
-                    if hasattr(Image, 'exif_transpose'):
-                        img = Image.exif_transpose(img)
-                    else:
-                        try:
-                            exif = img._getexif()
-                            if exif:
-                                orientation = exif.get(274)
-                                if orientation == 3:
-                                    img = img.rotate(180, expand=True)
-                                elif orientation == 6:
-                                    img = img.rotate(270, expand=True)
-                                elif orientation == 8:
-                                    img = img.rotate(90, expand=True)
-                        except Exception:
-                            pass
-                    img_format = img.format if img.format else 'JPEG'
-                    max_size = (800, 800)
-                    img.thumbnail(max_size, Image.LANCZOS)
-                    buffer = BytesIO()
-                    img.save(buffer, format=img_format, quality=80, optimize=True)
-                    buffer.seek(0)
-                    result = cloudinary.uploader.upload(buffer,
+                    # Otimiza a imagem
+                    optimized_image = optimize_image_upload(profile_pic_file)
+                    
+                    # Faz upload para o Cloudinary
+                    result = upload_to_cloudinary(
+                        optimized_image,
                         folder='profile_pics',
                         public_id=f"profile_pic_{user_id}",
-                        overwrite=True,
-                        resource_type="image"
+                        transformation=[
+                            {'width': 800, 'height': 800, 'crop': 'limit'},
+                            {'quality': 'auto:good'},
+                            {'fetch_format': 'auto'}
+                        ]
                     )
                     profile_pic_filename = result['secure_url']
-                except Exception:
-                    profile_pic_file.seek(0)
-                    result = cloudinary.uploader.upload(profile_pic_file,
-                        folder='profile_pics',
-                        public_id=f"profile_pic_{user_id}",
-                        overwrite=True,
-                        resource_type="image"
-                    )
-                    profile_pic_filename = result['secure_url']
+                except Exception as e:
+                    print(f"Erro no upload da foto de perfil: {e}")
+                    flash('Erro ao fazer upload da imagem. Tente novamente.', 'danger')
             else:
                 profile_pic_filename = request.form.get('profile_pic_filename') or (user_profile.get('profile_pic_filename') if user_profile else None)
 
@@ -435,47 +486,25 @@ def edit_profile():
         else:
             logo_file = request.files.get('logo_file')
             if logo_file and allowed_file(logo_file.filename):
-                # Compressão da imagem antes do upload
                 try:
-                    img = Image.open(logo_file)
-                    # Corrige orientação EXIF se necessário
-                    if hasattr(Image, 'exif_transpose'):
-                        img = Image.exif_transpose(img)
-                    else:
-                        try:
-                            exif = img._getexif()
-                            if exif:
-                                orientation = exif.get(274)
-                                if orientation == 3:
-                                    img = img.rotate(180, expand=True)
-                                elif orientation == 6:
-                                    img = img.rotate(270, expand=True)
-                                elif orientation == 8:
-                                    img = img.rotate(90, expand=True)
-                        except Exception:
-                            pass
-                    img_format = img.format if img.format else 'PNG'
-                    max_size = (800, 800)
-                    img.thumbnail(max_size, Image.LANCZOS)
-                    buffer = BytesIO()
-                    img.save(buffer, format=img_format, quality=80, optimize=True)
-                    buffer.seek(0)
-                    result = cloudinary.uploader.upload(buffer,
+                    # Otimiza a imagem
+                    optimized_image = optimize_image_upload(logo_file, max_width=800, max_height=800, quality=85)
+                    
+                    # Faz upload para o Cloudinary
+                    result = upload_to_cloudinary(
+                        optimized_image,
                         folder='logos',
                         public_id=f"logo_{user_id}",
-                        overwrite=True,
-                        resource_type="image"
+                        transformation=[
+                            {'width': 800, 'height': 800, 'crop': 'limit'},
+                            {'quality': 'auto:good'},
+                            {'fetch_format': 'auto'}
+                        ]
                     )
                     logo_filename = result['secure_url']
-                except Exception:
-                    logo_file.seek(0)
-                    result = cloudinary.uploader.upload(logo_file,
-                        folder='logos',
-                        public_id=f"logo_{user_id}",
-                        overwrite=True,
-                        resource_type="image"
-                    )
-                    logo_filename = result['secure_url']
+                except Exception as e:
+                    print(f"Erro no upload do logo: {e}")
+                    flash('Erro ao fazer upload do logo. Tente novamente.', 'danger')
             else:
                 logo_filename = request.form.get('logo_filename') or (user_profile.get('logo_filename') if user_profile else None)
 

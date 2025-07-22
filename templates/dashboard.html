@@ -283,24 +283,22 @@
                 <h3>Seu Cartão: {{ user_profile.nome_vendedor }}</h3>
                 <div class="profile-images">
                     <div class="profile-image-wrapper">
-                        <img src="{{ user_profile.get('profile_pic_filename', 'https://res.cloudinary.com/djqeq4f2l/image/upload/v1/profile_pics/profile_pic_687eb3b3e6ff6695e5928ada') or 'https://res.cloudinary.com/djqeq4f2l/image/upload/v1/profile_pics/profile_pic_687eb3b3e6ff6695e5928ada' }}" alt="Sua Foto de Perfil">
+                        {% set default_profile_pic = 'https://res.cloudinary.com/djqeq4f2l/image/upload/v1/profile_pics/profile_pic_687eb3b3e6ff6695e5928ada' %}
+                        {% set profile_pic = user_profile.get('profile_pic_filename') %}
+                        <img src="{{ profile_pic if profile_pic and profile_pic != 'None' else default_profile_pic }}" alt="Sua Foto de Perfil">
                     </div>
-                    {% if user_profile.logo_filename %}
+                    <div class="profile-image-wrapper logo">
+                        {% set default_logo = url_for('static', filename='logo.png') %}
                         {% if user_profile.logo_filename and user_profile.logo_filename != 'None' %}
-                        <div class="profile-image-wrapper logo">
                             {% if user_profile.logo_filename.startswith('http') %}
                                 <img src="{{ user_profile.logo_filename }}" alt="Logo da Empresa">
                             {% else %}
                                 <img src="{{ url_for('static', filename='uploads/' + user_profile.logo_filename) }}" alt="Logo da Empresa">
                             {% endif %}
-                        </div>
+                        {% else %}
+                            <img src="{{ default_logo }}" alt="Logo Padrão">
                         {% endif %}
-                    {% else %}
-                        <div class="profile-image-wrapper logo">
-                             {# Fallback para logo padrão da plataforma #}
-                            <img src="{{ url_for('static', filename='img/Logo-So-Minas.webp') }}" alt="Logo da Plataforma Padrão">
-                        </div>
-                    {% endif %}
+                    </div>
                 </div>
                 <div class="profile-info">
                     <p>Empresa: <strong>{{ user_profile.empresa_nome if user_profile.empresa_nome else 'Não definida' }}</strong></p>

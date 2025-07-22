@@ -42,33 +42,57 @@
     }
 
     .profile-logo-area {
-      margin-bottom: 22px;
-      min-height: 100px;
+      margin: 0 auto 25px;
+      min-height: 80px;
+      max-width: 280px;
+      width: 100%;
       display: flex;
       justify-content: center;
       align-items: center;
-      background: #f7fafd;
+      background: rgba(247, 250, 253, 0.95);
       border-radius: 16px;
-      padding: 12px 20px;
-      border: 1.5px solid #e3eaf5;
-      box-shadow: 0 2px 8px rgba(0, 100, 180, 0.07);
+      padding: 15px;
+      border: 2px solid rgba(227, 234, 245, 0.8);
+      box-shadow: 0 3px 12px rgba(0, 100, 180, 0.08);
       box-sizing: border-box;
-      transition: box-shadow 0.2s;
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .profile-logo-area::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: linear-gradient(135deg, rgba(255,255,255,0.1), rgba(255,255,255,0.4));
+      pointer-events: none;
     }
 
     .profile-logo-area:hover {
-      box-shadow: 0 4px 16px rgba(0, 100, 180, 0.13);
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(0, 100, 180, 0.12);
+      border-color: rgba(0, 100, 180, 0.15);
     }
 
     .profile-logo {
-      max-width: 220px;
-      max-height: 80px;
+      max-width: 100%;
+      max-height: 70px;
+      width: auto;
       height: auto;
       object-fit: contain;
+      object-position: center;
       display: block;
       margin: 0 auto;
-      transition: filter 0.2s;
-      filter: drop-shadow(0 2px 4px rgba(0,0,0,0.08));
+      transition: all 0.3s ease;
+      filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1));
+    }
+
+    .profile-logo:hover {
+      filter: drop-shadow(0 4px 8px rgba(0,0,0,0.15));
+      transform: scale(1.02);
     }
 
     .profile-pic-area {
@@ -247,11 +271,25 @@
 <body>
   <div class="container">
 
-    {% if profile.logo_filename and profile.logo_filename != 'None' and profile.logo_filename != None %}
-      <div class="profile-logo-area">
-        <img src="{{ profile.logo_filename }}" alt="Logo da Empresa {{ profile.nome_vendedor }}" class="profile-logo" loading="lazy">
-      </div>
-    {% endif %}
+    <div class="profile-logo-area">
+      {% set default_logo = url_for('static', filename='logo.png') %}
+      {% if profile.logo_filename and profile.logo_filename != 'None' and profile.logo_filename != None %}
+        <img 
+          src="{{ profile.logo_filename }}" 
+          alt="Logo da Empresa {{ profile.empresa_nome if profile.empresa_nome else profile.nome_vendedor }}" 
+          class="profile-logo" 
+          loading="lazy"
+          onerror="this.onerror=null; this.src='{{ default_logo }}'"
+        >
+      {% else %}
+        <img 
+          src="{{ default_logo }}" 
+          alt="Logo {{ profile.empresa_nome if profile.empresa_nome else 'da Plataforma' }}" 
+          class="profile-logo" 
+          loading="lazy"
+        >
+      {% endif %}
+    </div>
 
     <div class="profile-pic-area">
       <img src="{{ profile.profile_pic_filename }}" alt="Foto de Perfil" class="profile-pic">

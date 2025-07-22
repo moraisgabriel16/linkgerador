@@ -55,12 +55,10 @@ users_collection = db.users
 profiles_collection = db.profiles
 
 # --- Configuração de Upload de Imagens ---
-UPLOAD_FOLDER = os.path.join(app.root_path, 'static', 'uploads')
-ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif', 'webp'}
 
+ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif', 'webp'}
 # Novo limite de upload: 4MB
 MAX_IMAGE_SIZE_MB = 4
-app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 app.config['MAX_CONTENT_LENGTH'] = MAX_IMAGE_SIZE_MB * 1024 * 1024
 
 def allowed_file(filename):
@@ -593,9 +591,6 @@ def page_not_found(e):
     return render_template('404.html'), 404
 
 if __name__ == '__main__':
-    # Garante que a pasta de uploads existe ao iniciar o app
-    if not os.path.exists(UPLOAD_FOLDER):
-        os.makedirs(UPLOAD_FOLDER)
     app.run(debug=True)
 
 # Mover a rota dinâmica para o final do arquivo
